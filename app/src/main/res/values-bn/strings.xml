@@ -1,0 +1,57 @@
+<resources>
+    <string name="title_service_control">সার্ভিস কন্ট্রোল</string>
+    <string name="title_text_settings">টেক্সট সেটিংস</string>
+    <string name="title_background_settings">ব্যাকগ্রাউন্ড সেটিংস</string>
+    <string name="title_app_settings">অ্যাপ সেটিংস</string>
+
+    <string name="label_enable_service">Pure Vision সার্ভিস চালু করুন</string>
+    <string name="label_custom_text">কাস্টম টেক্সট</string>
+    <string name="hint_enter_text">এখানে আপনার টেক্সট লিখুন</string>
+    <string name="label_templates">টেমপ্লেট বেছে নিন</string> <string name="label_font_size">ফন্ট সাইজ</string>
+    <string name="label_text_opacity">টেক্সট অপাসিটি</string>
+    <string name="label_text_color">টেক্সট কালার</string>
+
+    <string name="label_enable_background">ব্যাকগ্রাউন্ড চালু করুন</string>
+    <string name="label_background_color">ব্যাকগ্রাউন্ড কালার</string>
+    <string name="label_background_opacity">ব্যাকগ্রাউন্ড অপাসিটি</string>
+
+    <string name="label_language">Language (ভাষা)</string>
+    <string name="label_privacy_assurance">এই অ্যাপটি ১০০% অফলাইনে চলে, কোনো ডেটা সংগ্রহ করে না এবং শতভাগ নিরাপদ।</string>
+
+    <string name="service_notification_title">Pure Vision</string>
+    <string name="service_notification_text">সার্ভিসটি চালু আছে</string>
+    <string name="service_notification_action_stop">বন্ধ করুন</string>
+
+    <string name="app_permission_dialog_title">পারমিশন ব্লক করা আছে</string>
+    <string name="app_permission_dialog_message">অ্যান্ড্রয়েড ১৩+ ভার্সনে, APK থেকে ইন্সটল করা অ্যাপের জন্য এই পারমিশনটি ডিফল্টরূপে ব্লক করা থাকে।\n\nএটি চালু করতে, আপনাকে ম্যানুয়ালি \'Restricted settings\' চালু করতে হবে।\n\n\'OK\' বাটন চাপলে আপনাকে \'App Info\' পেজে নিয়ে যাওয়া হবে।\n\nসেখানে গিয়ে যা করবেন:\n১. উপরের তিন-ডট (...) মেনুতে ক্লিক করুন।\n২. \'Allow restricted settings\' সিলেক্ট করুন এবং PIN দিয়ে কনফার্ম করুন।\n৩. এরপর অ্যাপে ফিরে এসে আবার সার্ভিসটি চালু করার চেষ্টা করুন।</string>
+    <string name="app_permission_dialog_button_ok">OK, App Info-তে চলো</string>
+    <string name="app_permission_dialog_button_cancel">Cancel</string>
+    <string name="app_permission_denied_toast">পারমিশন ছাড়া সার্ভিস চালু হবে না</string>
+
+    <string name="template_custom">কাস্টম...</string>
+
+    <string-array name="font_colors">
+        <item>সাদা</item>
+        <item>কালো</item>
+        <item>লাল</item>
+        <item>সবুজ</item>
+        <item>নীল</item>
+        <item>হলুদ</item>
+    </string-array>
+
+    <string-array name="background_colors">
+        <item>স্বচ্ছ</item>
+        <item>কালো</item>
+        <item>সাদা</item>
+        <item>ধূসর</item>
+        <item>লাল</item>
+        <item>নীল</item>
+    </string-array>
+
+    <string-array name="text_templates">
+        <item>Allah (ﷲ) is watching me</item>
+        <item>আল্লাহ (ﷲ) আমাকে দেখছেন</item>
+        <item>লা ইলাহা ইল্লাল্লাহু মুহাম্মাদুর রাসুলুল্লাহ</item>
+        <item>সুবহানাল্লাহ, আলহামদুলিল্লাহ, আল্লাহু আকবার</item>
+        <item>@string/template_custom</item> </string-array>
+</resources>

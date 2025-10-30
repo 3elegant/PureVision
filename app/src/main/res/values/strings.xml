@@ -1,0 +1,59 @@
+<resources>
+    <string name="app_name">Pure Vision</string>
+
+    <string name="title_service_control">Service Control</string>
+    <string name="title_text_settings">Text Settings</string>
+    <string name="title_background_settings">Background Settings</string>
+    <string name="title_app_settings">App Settings</string>
+
+    <string name="label_enable_service">Enable Pure Vision Service</string>
+    <string name="label_custom_text">Custom Text</string>
+    <string name="hint_enter_text">Enter your text here</string>
+    <string name="label_templates">Select Template</string> <string name="label_font_size">Font Size</string>
+    <string name="label_text_opacity">Text Opacity</string>
+    <string name="label_text_color">Text Color</string>
+
+    <string name="label_enable_background">Enable Background</string>
+    <string name="label_background_color">Background Color</string>
+    <string name="label_background_opacity">Background Opacity</string>
+
+    <string name="label_language">Language (ভাষা)</string>
+    <string name="label_privacy_assurance">This app runs fully offline, collects no data and 100% safe!</string>
+
+    <string name="service_notification_title">Pure Vision</string>
+    <string name="service_notification_text">Service is active</string>
+    <string name="service_notification_action_stop">Stop</string>
+
+    <string name="app_permission_dialog_title">Permission Blocked</string>
+    <string name="app_permission_dialog_message">On Android 13+, permissions for apps installed from APKs are restricted by default.\n\nTo enable this, you must manually \'Allow restricted settings\'.\n\n\'OK\' button will take you to the \'App Info\' page.\n\nSteps there:\n1. Tap the three-dot (...) menu in the top-right.\n2. Select \'Allow restricted settings\' and confirm.\n3. Return to the app and try enabling the service again.</string>
+    <string name="app_permission_dialog_button_ok">OK, Go to App Info</string>
+    <string name="app_permission_dialog_button_cancel">Cancel</string>
+    <string name="app_permission_denied_toast">Service cannot start without permission</string>
+
+    <string name="template_custom">Custom...</string>
+
+    <string-array name="font_colors">
+        <item>White</item>
+        <item>Black</item>
+        <item>Red</item>
+        <item>Green</item>
+        <item>Blue</item>
+        <item>Yellow</item>
+    </string-array>
+
+    <string-array name="background_colors">
+        <item>Transparent</item>
+        <item>Black</item>
+        <item>White</item>
+        <item>Grey</item>
+        <item>Red</item>
+        <item>Blue</item>
+    </string-array>
+
+    <string-array name="text_templates">
+        <item>Allah (ﷲ) is watching me</item>
+        <item>আল্লাহ (ﷲ) আমাকে দেখছেন</item>
+        <item>লা ইলাহা ইল্লাল্লাহু মুহাম্মাদুর রাসুলুল্লাহ</item>
+        <item>সুবহানাল্লাহ, আলহামদুলিল্লাহ, আল্লাহু আকবার</item>
+        <item>@string/template_custom</item> </string-array>
+</resources>
