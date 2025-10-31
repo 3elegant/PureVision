@@ -19,8 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="@string/app_name"
-            app:titleTextColor="?attr/colorOnPrimary"
-            android:background="?attr/colorPrimary"
+            app:titleTextColor="?attr/colorOnSurface"
+            android:background="?attr/colorSurface"
             />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -94,7 +94,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/label_templates"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu">
                         <AutoCompleteTextView
                             android:id="@+id/spinner_templates"
                             android:layout_width="match_parent"
@@ -155,7 +155,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:hint="@string/label_text_color"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu">
                         <AutoCompleteTextView
                             android:id="@+id/spinner_font_color"
                             android:layout_width="match_parent"
@@ -203,7 +203,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:hint="@string/label_background_color"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+                        style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu">
                         <AutoCompleteTextView
                             android:id="@+id/spinner_background_color"
                             android:layout_width="match_parent"

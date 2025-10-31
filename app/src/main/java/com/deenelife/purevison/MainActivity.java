@@ -5,12 +5,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PowerManager; // নতুন ইমপোর্ট
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,7 +26,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.TextView; // নতুন ইমপোর্ট
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -63,14 +64,14 @@ public class MainActivity extends AppCompatActivity {
     public static final String KEY_POS_Y = "PosY";
     public static final String KEY_LANGUAGE = "AppLanguage";
     public static final String KEY_IS_FIRST_LAUNCH = "IsFirstLaunch";
-    public static final String KEY_CORNER_RADIUS = "CornerRadius"; // নতুন কী
+    public static final String KEY_CORNER_RADIUS = "CornerRadius";
 
     // UI কম্পোনেন্ট
     private SwitchMaterial serviceSwitch, switchBackgroundEnabled;
     private TextInputEditText editTextCustom;
     private TextInputLayout textLayoutCustom;
     private AutoCompleteTextView spinnerTemplates, spinnerFontColor, spinnerBackgroundColor;
-    private Slider sliderFontSize, sliderTextOpacity, sliderBackgroundOpacity, sliderCornerRadius; // নতুন স্লাইডার
+    private Slider sliderFontSize, sliderTextOpacity, sliderBackgroundOpacity, sliderCornerRadius;
     private Toolbar toolbar;
 
     private ActivityResultLauncher<Intent> overlayPermissionLauncher;
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         sliderFontSize = findViewById(R.id.slider_font_size);
         sliderTextOpacity = findViewById(R.id.slider_text_opacity);
         sliderBackgroundOpacity = findViewById(R.id.slider_background_opacity);
-        sliderCornerRadius = findViewById(R.id.slider_corner_radius); // নতুন স্লাইডার
+        sliderCornerRadius = findViewById(R.id.slider_corner_radius);
 
         registerOverlayPermissionLauncher();
 
@@ -129,9 +130,21 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+
+        MenuItem versionItem = menu.findItem(R.id.action_version);
+        if (versionItem != null) {
+            try {
+                PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                String version = "v" + pInfo.versionName;
+                versionItem.setTitle(version);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         return true;
     }
 
+    // --- এই মেথডটি ঠিক করা হয়েছে ---
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
@@ -139,7 +152,17 @@ public class MainActivity extends AppCompatActivity {
             showLanguagePicker();
             return true;
         } else if (itemId == R.id.action_help) {
-            showHelpDialog();
+            // --- ফিক্স: পারমিশন চেক করে ডায়ালগ কল করা ---
+            boolean hasDisplay = (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) || Settings.canDrawOverlays(this);
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            boolean hasBattery = (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) || pm.isIgnoringBatteryOptimizations(getPackageName());
+
+            showHelpDialog(hasDisplay, hasBattery);
+            return true;
+            // --- ফিক্স শেষ ---
+        } else if (itemId == R.id.action_github) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/purevisionapp"));
+            startActivity(browserIntent);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -219,8 +242,8 @@ public class MainActivity extends AppCompatActivity {
             findViewById(R.id.text_layout_background_color).setEnabled(isChecked);
             findViewById(R.id.slider_background_opacity).setEnabled(isChecked);
             findViewById(R.id.label_bg_opacity_text).setEnabled(isChecked);
-            findViewById(R.id.slider_corner_radius).setEnabled(isChecked); // নতুন
-            findViewById(R.id.label_corner_radius_text).setEnabled(isChecked); // নতুন
+            findViewById(R.id.slider_corner_radius).setEnabled(isChecked);
+            findViewById(R.id.label_corner_radius_text).setEnabled(isChecked);
             saveSettingsAndNotifyService();
         });
 
@@ -242,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
         sliderFontSize.addOnSliderTouchListener(sliderSaveListener);
         sliderTextOpacity.addOnSliderTouchListener(sliderSaveListener);
         sliderBackgroundOpacity.addOnSliderTouchListener(sliderSaveListener);
-        sliderCornerRadius.addOnSliderTouchListener(sliderSaveListener); // নতুন
+        sliderCornerRadius.addOnSliderTouchListener(sliderSaveListener);
     }
 
     private void saveSettingsAndNotifyService() {
@@ -253,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putInt(KEY_OPACITY, (int) sliderTextOpacity.getValue());
         editor.putBoolean(KEY_BACKGROUND_ENABLED, switchBackgroundEnabled.isChecked());
         editor.putInt(KEY_BACKGROUND_OPACITY, (int) sliderBackgroundOpacity.getValue());
-        editor.putInt(KEY_CORNER_RADIUS, (int) sliderCornerRadius.getValue()); // নতুন
+        editor.putInt(KEY_CORNER_RADIUS, (int) sliderCornerRadius.getValue());
 
         editor.apply();
 
@@ -276,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
     private void loadSettings() {
         serviceSwitch.setChecked(sharedPreferences.getBoolean(KEY_SERVICE_ENABLED, false));
 
-        loadedSavedText = sharedPreferences.getString(KEY_OVERLAY_TEXT, "Allah is watching me");
+        loadedSavedText = sharedPreferences.getString(KEY_OVERLAY_TEXT, "Allah (ﷲ) is watching me");
         editTextCustom.setText(loadedSavedText);
 
         List<String> templates = Arrays.asList(getResources().getStringArray(R.array.text_templates));
@@ -293,15 +316,15 @@ public class MainActivity extends AppCompatActivity {
         sliderFontSize.setValue(sharedPreferences.getInt(KEY_FONT_SIZE, 14));
         sliderTextOpacity.setValue(sharedPreferences.getInt(KEY_OPACITY, 100));
         sliderBackgroundOpacity.setValue(sharedPreferences.getInt(KEY_BACKGROUND_OPACITY, 100));
-        sliderCornerRadius.setValue(sharedPreferences.getInt(KEY_CORNER_RADIUS, 8)); // নতুন (ডিফল্ট 8)
+        sliderCornerRadius.setValue(sharedPreferences.getInt(KEY_CORNER_RADIUS, 8));
 
         boolean bgEnabled = sharedPreferences.getBoolean(KEY_BACKGROUND_ENABLED, false);
         switchBackgroundEnabled.setChecked(bgEnabled);
         findViewById(R.id.text_layout_background_color).setEnabled(bgEnabled);
         findViewById(R.id.slider_background_opacity).setEnabled(bgEnabled);
         findViewById(R.id.label_bg_opacity_text).setEnabled(bgEnabled);
-        findViewById(R.id.slider_corner_radius).setEnabled(bgEnabled); // নতুন
-        findViewById(R.id.label_corner_radius_text).setEnabled(bgEnabled); // নতুন
+        findViewById(R.id.slider_corner_radius).setEnabled(bgEnabled);
+        findViewById(R.id.label_corner_radius_text).setEnabled(bgEnabled);
 
         String[] fontColorArray = getResources().getStringArray(R.array.font_colors);
         try {
@@ -323,6 +346,7 @@ public class MainActivity extends AppCompatActivity {
         if(loadedBgColorPos >= bgColorArray.length) loadedBgColorPos = 0;
     }
 
+    // --- এই মেথডটি ঠিক করা হয়েছে ---
     @Override
     protected void onResume() {
         super.onResume();
@@ -331,6 +355,9 @@ public class MainActivity extends AppCompatActivity {
         if (shouldShowPermissionDialog) {
             showRestrictedPermissionGuideDialog();
             shouldShowPermissionDialog = false;
+        } else {
+            // --- ফিক্স: এখানে checkAndShowPermissionGuide() কল করা হবে ---
+            checkAndShowPermissionGuide();
         }
     }
 
@@ -447,13 +474,37 @@ public class MainActivity extends AppCompatActivity {
     private void checkFirstLaunch() {
         boolean isFirstLaunch = sharedPreferences.getBoolean(KEY_IS_FIRST_LAUNCH, true);
         if (isFirstLaunch) {
-            showHelpDialog();
+            showHelpDialog(false, false);
             sharedPreferences.edit().putBoolean(KEY_IS_FIRST_LAUNCH, false).apply();
         }
     }
 
-    // --- এই মেথডটি সম্পূর্ণ ঠিক করা হয়েছে ---
-    private void showHelpDialog() {
+    // --- এই মেথডটি নতুন যোগ করা হয়েছে (Error 2 ফিক্স) ---
+    private void checkAndShowPermissionGuide() {
+        // যদি হেল্প ডায়ালগ আগে থেকেই খোলা থাকে, তবে আবার দেখানোর দরকার নেই
+        if (helpDialog != null && helpDialog.isShowing()) {
+            return;
+        }
+
+        boolean hasDisplayPerm = true;
+        boolean hasBatteryPerm = true;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            hasDisplayPerm = Settings.canDrawOverlays(this);
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            hasBatteryPerm = pm.isIgnoringBatteryOptimizations(getPackageName());
+        }
+
+        // যদি দুটি পারমিশনই দেওয়া থাকে, তবে কিছুই দেখানোর দরকার নেই
+        if (hasDisplayPerm && hasBatteryPerm) {
+            return;
+        }
+
+        // যদি কোনো একটি পারমিশন না থাকে, তবে গাইড দেখাই
+        showHelpDialog(hasDisplayPerm, hasBatteryPerm);
+    }
+
+    private void showHelpDialog(boolean hasDisplayPerm, boolean hasBatteryPerm) {
         if (helpDialog != null && helpDialog.isShowing()) {
             helpDialog.dismiss();
         }
@@ -466,10 +517,8 @@ public class MainActivity extends AppCompatActivity {
         Button btnDisplay = dialogView.findViewById(R.id.btn_permission_display);
         Button btnBattery = dialogView.findViewById(R.id.btn_permission_battery);
 
-        // --- পারমিশন চেক করার লজিক ---
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // ১. ডিসপ্লে পারমিশন চেক
-            if (Settings.canDrawOverlays(this)) {
+            if (hasDisplayPerm) {
                 btnDisplay.setText(getString(R.string.button_granted));
                 btnDisplay.setEnabled(false);
             } else {
@@ -477,9 +526,7 @@ public class MainActivity extends AppCompatActivity {
                 btnDisplay.setEnabled(true);
             }
 
-            // ২. ব্যাটারি পারমিশন চেক
-            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            if (pm.isIgnoringBatteryOptimizations(getPackageName())) {
+            if (hasBatteryPerm) {
                 btnBattery.setText(getString(R.string.button_granted));
                 btnBattery.setEnabled(false);
             } else {
@@ -487,25 +534,21 @@ public class MainActivity extends AppCompatActivity {
                 btnBattery.setEnabled(true);
             }
         }
-        // --- পারমিশন চেক শেষ ---
 
         btnDisplay.setOnClickListener(v -> {
-            // এই বাটনটি সব সময় ডিসপ্লে সেটিংসে যাবে
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + getPackageName()));
-            overlayPermissionLauncher.launch(intent); // আমরা registerOverlayPermissionLauncher ব্যবহার করি
+            overlayPermissionLauncher.launch(intent);
             helpDialog.dismiss();
         });
 
         btnBattery.setOnClickListener(v -> {
-            // ব্যাটারি অপ্টিমাইজেশন সেটিংসে পাঠাই
             try {
                 Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
                 intent.setData(Uri.parse("package:" + getPackageName()));
                 startActivity(intent);
             } catch (Exception e) {
                 e.printStackTrace();
-                // ফলব্যাক: App Info পেজে পাঠানো
                 Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                 Uri uri = Uri.fromParts("package", getPackageName(), null);
                 intent.setData(uri);
@@ -514,7 +557,14 @@ public class MainActivity extends AppCompatActivity {
             helpDialog.dismiss();
         });
 
+        // "Close" বাটন
         builder.setNegativeButton(R.string.app_permission_dialog_button_cancel, (dialog, which) -> dialog.dismiss());
+
+        // "Video Tutorial" বাটন
+        builder.setNeutralButton(R.string.button_video_tutorial, (dialog, which) -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/purevisionapp/8"));
+            startActivity(browserIntent);
+        });
 
         helpDialog = builder.create();
         helpDialog.show();

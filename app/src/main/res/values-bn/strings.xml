@@ -7,6 +7,8 @@
     <string name="label_corner_radius">কর্নার রেডিয়াস</string>
     <string name="button_granted">পারমিশন দেওয়া হয়েছে</string>
 
+    <string name="button_video_tutorial">ভিডিও টিউটোরিয়াল দেখুন</string>
+
     <string name="label_enable_service">Pure Vision চালু করুন</string>
     <string name="label_custom_text">কাস্টম টেক্সট</string>
     <string name="hint_enter_text">এখানে আপনার টেক্সট লিখুন</string>
@@ -19,7 +21,7 @@
     <string name="label_background_color">ব্যাকগ্রাউন্ড কালার</string>
     <string name="label_background_opacity">ব্যাকগ্রাউন্ড অপাসিটি</string>
 
-    <string name="label_language">Language (ভাষা)</string>
+    <string name="label_language">Language</string>
     <string name="label_privacy_assurance">গোপনীয়তা: এই অ্যাপটি ১০০% অফলাইনে চলে এবং কোনো ডেটা সংগ্রহ করে না।</string>
 
     <string name="service_notification_title">Pure Vision</string>

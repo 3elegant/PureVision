@@ -43,7 +43,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="?attr/colorOnSurface"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="4dp"/>
     <TextView
         android:layout_width="wrap_content"

@@ -9,6 +9,8 @@
     <string name="label_corner_radius">Corner Radius</string>
     <string name="button_granted">Permission Granted</string>
 
+    <string name="button_video_tutorial">Watch Video Tutorial</string>
+
     <string name="label_enable_service">Enable Pure Vision Service</string>
     <string name="label_custom_text">Custom Text</string>
     <string name="hint_enter_text">Enter your text here</string>
@@ -21,7 +23,7 @@
     <string name="label_background_color">Background Color</string>
     <string name="label_background_opacity">Background Opacity</string>
 
-    <string name="label_language">Language (ভাষা)</string>
+    <string name="label_language">Language</string>
     <string name="label_privacy_assurance">Privacy: This app runs 100% offline and collects no data.</string>
 
     <string name="service_notification_title">Pure Vision</string>

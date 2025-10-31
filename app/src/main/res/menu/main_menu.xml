@@ -2,10 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
+    <item
+        android:id="@+id/action_version"
+        android:title="v1.0.0"
+        android:enabled="false"
+        app:showAsAction="always" />
+
     <item
         android:id="@+id/action_help"
         android:title="@string/title_help_guide"
         android:icon="@drawable/ic_help"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_github"
+        android:title="Telegram Channel"
+        android:icon="@drawable/ic_open_in_new"
         app:showAsAction="ifRoom" />
 
     <item
