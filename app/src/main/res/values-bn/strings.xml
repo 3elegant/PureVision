@@ -4,6 +4,8 @@
     <string name="title_background_settings">ব্যাকগ্রাউন্ড সেটিংস</string>
     <string name="title_app_settings">অ্যাপ সেটিংস</string>
 
+    <string name="app_privacy_note_short">দ্রষ্টব্য: এই অ্যাপটি ১০০% অফলাইন, নিরাপদ এবং কোনো ডেটা সংগ্রহ করে না।</string>
+
     <string name="label_corner_radius">কর্নার রেডিয়াস</string>
     <string name="button_granted">পারমিশন দেওয়া হয়েছে</string>
 
@@ -53,6 +55,9 @@
         <item>লাল</item>
         <item>নীল</item>
     </string-array>
+
+    <string name="action_share">Share</string>
+    <string name="share_text">Download Pure Vision App => https://app.deenelife.com/purevision</string>
 
     <string name="title_help_guide">সেটআপ গাইড</string>
     <string name="title_display_permission">১. অন্যান্য অ্যাপের উপর প্রদর্শন</string>

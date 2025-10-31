@@ -151,6 +151,14 @@ public class MainActivity extends AppCompatActivity {
         if (itemId == R.id.action_language) {
             showLanguagePicker();
             return true;
+        } else if (itemId == R.id.action_share) {
+            // --- নতুন শেয়ার লজিক ---
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text));
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.action_share)));
+            return true;
+            // --- শেয়ার লজিক শেষ ---
         } else if (itemId == R.id.action_help) {
             // --- ফিক্স: পারমিশন চেক করে ডায়ালগ কল করা ---
             boolean hasDisplay = (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) || Settings.canDrawOverlays(this);

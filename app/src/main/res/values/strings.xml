@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">PureVision</string>
 
+    <string name="app_privacy_note_short">Note: This app is 100% offline, safe, and does not collect any data.</string>
+
     <string name="title_service_control">Service Control</string>
     <string name="title_text_settings">Text Settings</string>
     <string name="title_background_settings">Background Settings</string>
@@ -59,10 +61,13 @@
     <string-array name="text_templates">
         <item>Allah (ﷲ) is watching me</item>
         <item>আল্লাহ (ﷲ) আমাকে দেখছেন</item>
-        <item>Focus on your Goal</item>
-        <item>Be Persistent</item>
+        <item>সুবহানাল্লাহ, আলহামদুলিল্লাহ, আল্লাহু আকবার</item>
+        <item>লা ইলাহা ইল্লাল্লাহু মুহাম্মাদুর রাসুলুল্লাহ</item>
         <item>@string/template_custom</item>
     </string-array>
+
+    <string name="action_share">Share</string>
+    <string name="share_text">Download Pure Vision App => https://app.deenelife.com/purevision</string>
 
     <string name="title_help_guide">Setup Guide</string>
     <string name="title_display_permission">1. Display Over Other Apps</string>
