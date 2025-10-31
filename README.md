@@ -1,4 +1,4 @@
-# Pure Vision v1.1
+# PureVision v1.1
 
 A simple, beautiful, and privacy-focused app to keep you mindful with a persistent text overlay on your screen.
 
