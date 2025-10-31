@@ -1,15 +1,19 @@
 <resources>
-    <string name="app_name">Pure Vision</string>
+    <string name="app_name">PureVision</string>
 
     <string name="title_service_control">Service Control</string>
     <string name="title_text_settings">Text Settings</string>
     <string name="title_background_settings">Background Settings</string>
     <string name="title_app_settings">App Settings</string>
 
+    <string name="label_corner_radius">Corner Radius</string>
+    <string name="button_granted">Permission Granted</string>
+
     <string name="label_enable_service">Enable Pure Vision Service</string>
     <string name="label_custom_text">Custom Text</string>
     <string name="hint_enter_text">Enter your text here</string>
-    <string name="label_templates">Select Template</string> <string name="label_font_size">Font Size</string>
+    <string name="label_templates">Select Template</string>
+    <string name="label_font_size">Font Size</string>
     <string name="label_text_opacity">Text Opacity</string>
     <string name="label_text_color">Text Color</string>
 
@@ -18,7 +22,7 @@
     <string name="label_background_opacity">Background Opacity</string>
 
     <string name="label_language">Language (ভাষা)</string>
-    <string name="label_privacy_assurance">This app runs fully offline, collects no data and 100% safe!</string>
+    <string name="label_privacy_assurance">Privacy: This app runs 100% offline and collects no data.</string>
 
     <string name="service_notification_title">Pure Vision</string>
     <string name="service_notification_text">Service is active</string>
@@ -53,7 +57,17 @@
     <string-array name="text_templates">
         <item>Allah (ﷲ) is watching me</item>
         <item>আল্লাহ (ﷲ) আমাকে দেখছেন</item>
-        <item>লা ইলাহা ইল্লাল্লাহু মুহাম্মাদুর রাসুলুল্লাহ</item>
-        <item>সুবহানাল্লাহ, আলহামদুলিল্লাহ, আল্লাহু আকবার</item>
-        <item>@string/template_custom</item> </string-array>
+        <item>Focus on your Goal</item>
+        <item>Be Persistent</item>
+        <item>@string/template_custom</item>
+    </string-array>
+
+    <string name="title_help_guide">Setup Guide</string>
+    <string name="title_display_permission">1. Display Over Other Apps</string>
+    <string name="desc_display_permission">This is mandatory. The app needs this permission to show text on the screen. (If you installed via APK, you may need to enable \'Allow restricted settings\' from the App Info (⋮) menu first.)</string>
+    <string name="button_display_permission">Go to Display Settings</string>
+
+    <string name="title_battery_permission">2. Battery Optimization (Recommended)</string>
+    <string name="desc_battery_permission">To ensure the service runs 24/7 and is not stopped by your phone, please set battery usage to \'Unrestricted\'.</string>
+    <string name="button_battery_permission">Go to Battery Settings</string>
 </resources>

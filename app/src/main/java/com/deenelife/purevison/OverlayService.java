@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable; // নতুন ইমপোর্ট
 import android.os.Build;
 import android.os.IBinder;
 import android.util.TypedValue;
@@ -26,6 +27,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
+
+import java.util.Arrays;
 
 public class OverlayService extends Service implements View.OnTouchListener {
 
@@ -137,32 +140,36 @@ public class OverlayService extends Service implements View.OnTouchListener {
         return START_STICKY;
     }
 
+    // --- এই মেথডটি কর্নার রেডিয়াসের জন্য আপডেট করা হয়েছে ---
     private void loadAndUpdateSettings() {
         String savedText = sharedPreferences.getString(MainActivity.KEY_OVERLAY_TEXT, "Allah is watching me");
         int savedFontSize = sharedPreferences.getInt(MainActivity.KEY_FONT_SIZE, 14);
         int savedTextOpacity = sharedPreferences.getInt(MainActivity.KEY_OPACITY, 100);
         boolean isBackgroundEnabled = sharedPreferences.getBoolean(MainActivity.KEY_BACKGROUND_ENABLED, false);
         int savedBackgroundOpacity = sharedPreferences.getInt(MainActivity.KEY_BACKGROUND_OPACITY, 100);
+        int savedCornerRadius = sharedPreferences.getInt(MainActivity.KEY_CORNER_RADIUS, 8); // নতুন
 
-        String savedFontColorName;
-        String savedBackgroundColorName;
-        // savedFontStyleName মুছে ফেলা হয়েছে
-
+        int fontColorPos;
+        String[] fontColorArray = getResources().getStringArray(R.array.font_colors);
         try {
-            savedFontColorName = sharedPreferences.getString(MainActivity.KEY_FONT_COLOR, "White");
+            fontColorPos = sharedPreferences.getInt(MainActivity.KEY_FONT_COLOR, 0);
         } catch (ClassCastException e) {
-            int oldPosition = sharedPreferences.getInt(MainActivity.KEY_FONT_COLOR, 0);
-            savedFontColorName = getResources().getStringArray(R.array.font_colors)[oldPosition];
+            String oldColor = sharedPreferences.getString(MainActivity.KEY_FONT_COLOR, "White");
+            fontColorPos = Math.max(0, Arrays.asList(fontColorArray).indexOf(oldColor));
         }
 
+        int bgColorPos;
+        String[] bgColorArray = getResources().getStringArray(R.array.background_colors);
         try {
-            savedBackgroundColorName = sharedPreferences.getString(MainActivity.KEY_BACKGROUND_COLOR, "Transparent");
+            bgColorPos = sharedPreferences.getInt(MainActivity.KEY_BACKGROUND_COLOR, 0);
         } catch (ClassCastException e) {
-            int oldPosition = sharedPreferences.getInt(MainActivity.KEY_BACKGROUND_COLOR, 0);
-            savedBackgroundColorName = getResources().getStringArray(R.array.background_colors)[oldPosition];
+            String oldColor = sharedPreferences.getString(MainActivity.KEY_BACKGROUND_COLOR, "Transparent");
+            bgColorPos = Math.max(0, Arrays.asList(bgColorArray).indexOf(oldColor));
         }
 
-        // ফন্ট স্টাইল চেক করার কোড মুছে ফেলা হয়েছে
+        if(fontColorPos >= fontColorArray.length) fontColorPos = 0;
+        if(bgColorPos >= bgColorArray.length) bgColorPos = 0;
+
 
         overlayTextView.setText(savedText);
         overlayTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, savedFontSize);
@@ -170,9 +177,8 @@ public class OverlayService extends Service implements View.OnTouchListener {
         float textAlphaValue = savedTextOpacity / 100.0f;
         overlayTextView.setAlpha(textAlphaValue);
 
-        overlayTextView.setTextColor(getFontColor(savedFontColorName));
+        overlayTextView.setTextColor(getFontColor(fontColorPos));
 
-        // --- ফন্ট স্টাইল প্রয়োগ করা (SolaimanLipi হার্ডকোড করা হয়েছে) ---
         try {
             Typeface customFont = ResourcesCompat.getFont(this, R.font.solaimanlipi);
             overlayTextView.setTypeface(customFont);
@@ -181,11 +187,22 @@ public class OverlayService extends Service implements View.OnTouchListener {
             overlayTextView.setTypeface(Typeface.DEFAULT);
         }
 
+        // --- ব্যাকগ্রাউন্ড এবং কর্নার রেডিয়াস সেট করার নতুন লজিক ---
         if (isBackgroundEnabled) {
-            int backgroundColor = getBackgroundColor(savedBackgroundColorName);
+            // একটি কাস্টম ড্রয়েবল তৈরি করি
+            GradientDrawable backgroundDrawable = new GradientDrawable();
+            backgroundDrawable.setShape(GradientDrawable.RECTANGLE);
+
+            // কর্নার রেডিয়াস সেট করি
+            backgroundDrawable.setCornerRadius(dpToPx(savedCornerRadius));
+
+            // কালার এবং অপাসিটি সেট করি
+            int backgroundColor = getBackgroundColor(bgColorPos);
             int alpha = (int) (savedBackgroundOpacity * 2.55);
             backgroundColor = (backgroundColor & 0x00FFFFFF) | (alpha << 24);
-            overlayTextView.setBackgroundColor(backgroundColor);
+            backgroundDrawable.setColor(backgroundColor);
+
+            overlayTextView.setBackground(backgroundDrawable); // কাস্টম ব্যাকগ্রাউন্ড সেট করি
             overlayTextView.setPadding(dpToPx(8), dpToPx(8), dpToPx(8), dpToPx(8));
             overlayTextView.setShadowLayer(0,0,0, Color.TRANSPARENT);
         } else {
@@ -195,7 +212,13 @@ public class OverlayService extends Service implements View.OnTouchListener {
         }
     }
 
-    private int getFontColor(String colorName) {
+    private int getFontColor(int position) {
+        String[] colors = getResources().getStringArray(R.array.font_colors);
+        String colorName = "White";
+        if (position >= 0 && position < colors.length) {
+            colorName = colors[position];
+        }
+
         switch (colorName) {
             case "White":
             case "সাদা":
@@ -220,7 +243,13 @@ public class OverlayService extends Service implements View.OnTouchListener {
         }
     }
 
-    private int getBackgroundColor(String colorName) {
+    private int getBackgroundColor(int position) {
+        String[] colors = getResources().getStringArray(R.array.background_colors);
+        String colorName = "Transparent";
+        if (position >= 0 && position < colors.length) {
+            colorName = colors[position];
+        }
+
         switch (colorName) {
             case "Transparent":
             case "স্বচ্ছ":

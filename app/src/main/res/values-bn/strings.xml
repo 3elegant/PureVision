@@ -4,19 +4,23 @@
     <string name="title_background_settings">ব্যাকগ্রাউন্ড সেটিংস</string>
     <string name="title_app_settings">অ্যাপ সেটিংস</string>
 
-    <string name="label_enable_service">Pure Vision সার্ভিস চালু করুন</string>
+    <string name="label_corner_radius">কর্নার রেডিয়াস</string>
+    <string name="button_granted">পারমিশন দেওয়া হয়েছে</string>
+
+    <string name="label_enable_service">Pure Vision চালু করুন</string>
     <string name="label_custom_text">কাস্টম টেক্সট</string>
     <string name="hint_enter_text">এখানে আপনার টেক্সট লিখুন</string>
-    <string name="label_templates">টেমপ্লেট বেছে নিন</string> <string name="label_font_size">ফন্ট সাইজ</string>
+    <string name="label_templates">টেমপ্লেট বেছে নিন</string>
+    <string name="label_font_size">ফন্ট সাইজ</string>
     <string name="label_text_opacity">টেক্সট অপাসিটি</string>
     <string name="label_text_color">টেক্সট কালার</string>
 
-    <string name="label_enable_background">ব্যাকগ্রাউন্ড চালু করুন</string>
+    <string name="label_enable_background">টেক্সট ব্যাকগ্রাউন্ড চালু করুন</string>
     <string name="label_background_color">ব্যাকগ্রাউন্ড কালার</string>
     <string name="label_background_opacity">ব্যাকগ্রাউন্ড অপাসিটি</string>
 
     <string name="label_language">Language (ভাষা)</string>
-    <string name="label_privacy_assurance">এই অ্যাপটি ১০০% অফলাইনে চলে, কোনো ডেটা সংগ্রহ করে না এবং শতভাগ নিরাপদ।</string>
+    <string name="label_privacy_assurance">গোপনীয়তা: এই অ্যাপটি ১০০% অফলাইনে চলে এবং কোনো ডেটা সংগ্রহ করে না।</string>
 
     <string name="service_notification_title">Pure Vision</string>
     <string name="service_notification_text">সার্ভিসটি চালু আছে</string>
@@ -48,10 +52,12 @@
         <item>নীল</item>
     </string-array>
 
-    <string-array name="text_templates">
-        <item>Allah (ﷲ) is watching me</item>
-        <item>আল্লাহ (ﷲ) আমাকে দেখছেন</item>
-        <item>লা ইলাহা ইল্লাল্লাহু মুহাম্মাদুর রাসুলুল্লাহ</item>
-        <item>সুবহানাল্লাহ, আলহামদুলিল্লাহ, আল্লাহু আকবার</item>
-        <item>@string/template_custom</item> </string-array>
+    <string name="title_help_guide">সেটআপ গাইড</string>
+    <string name="title_display_permission">১. অন্যান্য অ্যাপের উপর প্রদর্শন</string>
+    <string name="desc_display_permission">এটি বাধ্যতামূলক। স্ক্রিনে টেক্সট দেখানোর জন্য এই পারমিশন প্রয়োজন। (আপনি যদি APK থেকে ইন্সটল করেন, তবে App Info-এর (⋮) মেনু থেকে \'Allow restricted settings\' চালু করার প্রয়োজন হতে পারে।)</string>
+    <string name="button_display_permission">ডিসপ্লে সেটিংসে যান</string>
+
+    <string name="title_battery_permission">২. ব্যাটারি অপ্টিমাইজেশন (গুরুত্বপূর্ণ)</string>
+    <string name="desc_battery_permission">সার্ভিসটি যেন ২৪/৭ চালু থাকে এবং আপনার ফোন সিস্টেম এটিকে বন্ধ করে না দেয়, তা নিশ্চিত করতে অনুগ্রহ করে ব্যাটারি ব্যবহার \'Unrestricted\' (সীমাহীন) সেট করুন।</string>
+    <string name="button_battery_permission">ব্যাটারি সেটিংসে যান</string>
 </resources>
