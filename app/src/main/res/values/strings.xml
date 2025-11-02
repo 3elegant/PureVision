@@ -14,6 +14,7 @@
     <string name="button_video_tutorial">Watch Video Tutorial</string>
 
     <string name="label_enable_service">Enable Pure Vision Service</string>
+    <string name="label_lock_position">Lock Position (Enable Click-through)</string>
     <string name="label_custom_text">Custom Text</string>
     <string name="hint_enter_text">Enter your text here</string>
     <string name="label_templates">Select Template</string>
@@ -77,4 +78,22 @@
     <string name="title_battery_permission">2. Battery Optimization (Recommended)</string>
     <string name="desc_battery_permission">To ensure the service runs 24/7 and is not stopped by your phone, please set battery usage to \'Unrestricted\'.</string>
     <string name="button_battery_permission">Go to Battery Settings</string>
+
+    <string name="label_enable_zikr_mode">Enable Zikr Mode</string>
+    <string name="title_zikr_mode_settings">Zikr Mode Settings</string>
+    <string name="label_zikr_duration">Zikr Change Duration</string>
+    <string name="label_seconds">sec</string>
+
+    <string name="label_zikr_list">Your Zikr List</string>
+    <string name="hint_enter_zikr">Enter Zikr here</string>
+    <string name="button_delete_zikr">Delete</string>
+    <string name="button_add_new_zikr">Add New Zikr</string>
+
+
+    <string name="zikr_default_1">SubhanAllah</string>
+    <string name="zikr_default_2">Alhamdulillah</string>
+    <string name="zikr_default_3">Allahu Akbar</string>
+    <string name="zikr_default_4">La ilaha illAllah</string>
+    <string name="zikr_default_5">Astaghfirullah</string>
+
 </resources>

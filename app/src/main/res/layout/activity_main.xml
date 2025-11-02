@@ -7,12 +7,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    android:background="?attr/android:colorBackground"
+    android:background="?attr/colorSurface"
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -20,7 +21,6 @@
             android:layout_height="?attr/actionBarSize"
             app:title="@string/app_name"
             app:titleTextColor="?attr/colorOnSurface"
-            android:background="?attr/colorSurface"
             />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -34,12 +34,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="12dp">
+            android:padding="16dp">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardUseCompatPadding="true"
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_marginBottom="8dp"
                 app:contentPadding="16dp">
 
                 <LinearLayout
@@ -51,10 +52,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/title_service_control"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
+                        android:textAppearance="?attr/textAppearanceTitleLarge"
                         android:textColor="?attr/colorPrimary"
                         android:layout_marginBottom="16dp"/>
+
+                    **<com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.CardView.Outlined"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="12dp"
+                    app:contentPadding="12dp">**
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switch_service"
@@ -62,7 +70,40 @@
                         android:layout_height="wrap_content"
                         android:text="@string/label_enable_service"
                         android:minHeight="48dp"
-                        android:textSize="18sp"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        />
+                    **</com.google.android.material.card.MaterialCardView>**
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switch_lock_position"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_lock_position"
+                        android:minHeight="48dp"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switch_zikr_mode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_enable_zikr_mode"
+                        android:minHeight="48dp"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
                         />
 
                 </LinearLayout>
@@ -70,9 +111,79 @@
 
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_zikr_settings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardUseCompatPadding="true"
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_marginBottom="8dp"
+                app:contentPadding="16dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_zikr_mode_settings"
+                        android:textAppearance="?attr/textAppearanceTitleLarge"
+                        android:textColor="?attr/colorPrimary"
+                        android:layout_marginBottom="16dp"/>
+
+                    <TextView
+                        android:id="@+id/label_zikr_duration_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/label_zikr_duration"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        />
+                    <com.google.android.material.slider.Slider
+                        android:id="@+id/slider_zikr_duration"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:valueFrom="5.0"
+                        android:valueTo="60.0"
+                        android:stepSize="1.0"
+                        android:value="10.0" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_zikr_list"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:layout_marginTop="16dp"/>
+
+                    <LinearLayout
+                        android:id="@+id/zikr_list_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="8dp">
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btn_add_new_zikr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/button_add_new_zikr"
+                        android:layout_marginTop="12dp"
+                        style="?attr/materialButtonStyle" />
+
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_text_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_marginBottom="8dp"
                 app:contentPadding="16dp">
 
                 <LinearLayout
@@ -84,8 +195,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/title_text_settings"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
+                        android:textAppearance="?attr/textAppearanceTitleLarge"
                         android:textColor="?attr/colorPrimary"
                         android:layout_marginBottom="16dp"/>
 
@@ -94,7 +204,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/label_templates"
-                        style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu">
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
                         <AutoCompleteTextView
                             android:id="@+id/spinner_templates"
                             android:layout_width="match_parent"
@@ -108,9 +218,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/label_custom_text"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="16dp"
                         android:visibility="gone"
-                        tools:visibility="visible">
+                        tools:visibility="visible"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_custom"
                             android:layout_width="match_parent"
@@ -122,7 +233,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="@string/label_font_size"
-                        android:textSize="16sp"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
                         />
                     <com.google.android.material.slider.Slider
                         android:id="@+id/slider_font_size"
@@ -136,9 +247,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="16dp"
                         android:text="@string/label_text_opacity"
-                        android:textSize="16sp"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
                         />
                     <com.google.android.material.slider.Slider
                         android:id="@+id/slider_text_opacity"
@@ -153,9 +264,9 @@
                         android:id="@+id/text_layout_font_color"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="16dp"
                         android:hint="@string/label_text_color"
-                        style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu">
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
                         <AutoCompleteTextView
                             android:id="@+id/spinner_font_color"
                             android:layout_width="match_parent"
@@ -171,7 +282,8 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardUseCompatPadding="true"
+                style="@style/Widget.Material3.CardView.Filled"
+                android:layout_marginBottom="8dp"
                 app:contentPadding="16dp">
 
                 <LinearLayout
@@ -183,8 +295,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/title_background_settings"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
+                        android:textAppearance="?attr/textAppearanceTitleLarge"
                         android:textColor="?attr/colorPrimary"
                         android:layout_marginBottom="16dp"/>
 
@@ -194,16 +305,16 @@
                         android:layout_height="wrap_content"
                         android:text="@string/label_enable_background"
                         android:minHeight="48dp"
-                        android:textSize="18sp"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
                         />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/text_layout_background_color"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="16dp"
                         android:hint="@string/label_background_color"
-                        style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu">
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
                         <AutoCompleteTextView
                             android:id="@+id/spinner_background_color"
                             android:layout_width="match_parent"
@@ -218,7 +329,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="@string/label_background_opacity"
-                        android:textSize="16sp"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
                         />
                     <com.google.android.material.slider.Slider
                         android:id="@+id/slider_background_opacity"
@@ -233,9 +344,9 @@
                         android:id="@+id/label_corner_radius_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="16dp"
                         android:text="@string/label_corner_radius"
-                        android:textSize="16sp"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
                         />
                     <com.google.android.material.slider.Slider
                         android:id="@+id/slider_corner_radius"
@@ -253,13 +364,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/label_privacy_assurance"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?android:attr/textColorSecondary"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:gravity="center"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 app:drawableTopCompat="@drawable/ic_menu_shield"
-                app:drawableTint="?attr/colorPrimary"
+                app:drawableTint="?attr/colorOnSurfaceVariant"
                 android:drawablePadding="8dp"/>
 
         </LinearLayout>

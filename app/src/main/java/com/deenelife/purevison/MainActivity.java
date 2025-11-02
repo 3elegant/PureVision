@@ -26,6 +26,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,14 +40,17 @@ import androidx.appcompat.widget.Toolbar;
 
 // Material Design 3 কম্পোনেন্ট ইমপোর্ট
 import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,14 +69,32 @@ public class MainActivity extends AppCompatActivity {
     public static final String KEY_LANGUAGE = "AppLanguage";
     public static final String KEY_IS_FIRST_LAUNCH = "IsFirstLaunch";
     public static final String KEY_CORNER_RADIUS = "CornerRadius";
+    public static final String KEY_POSITION_LOCKED = "PositionLocked";
+
+    // --- Zikr Mode Keys ---
+    public static final String KEY_ZIKR_MODE_ENABLED = "ZikrModeEnabled";
+    public static final String KEY_ZIKR_DURATION = "ZikrDuration";
+    public static final String KEY_ZIKR_LIST = "ZikrList";
+    public static final String ZIKR_DELIMITER = ";;;"; // যিকির আলাদা করার জন্য
+    // --- Zikr Mode Keys শেষ ---
+
 
     // UI কম্পোনেন্ট
-    private SwitchMaterial serviceSwitch, switchBackgroundEnabled;
+    private SwitchMaterial serviceSwitch, switchBackgroundEnabled, switchLockPosition;
     private TextInputEditText editTextCustom;
     private TextInputLayout textLayoutCustom;
     private AutoCompleteTextView spinnerTemplates, spinnerFontColor, spinnerBackgroundColor;
     private Slider sliderFontSize, sliderTextOpacity, sliderBackgroundOpacity, sliderCornerRadius;
     private Toolbar toolbar;
+
+    // --- Zikr Mode UI ---
+    private SwitchMaterial switchZikrMode;
+    private MaterialCardView cardZikrSettings;
+    private Slider sliderZikrDuration;
+    private TextView labelZikrDuration;
+    private LinearLayout zikrListContainer; // যিকির তালিকার কন্টেইনার
+    private Button btnAddNewZikr; // নতুন যিকির যোগ করার বাটন
+    // --- Zikr Mode UI শেষ ---
 
     private ActivityResultLauncher<Intent> overlayPermissionLauncher;
     private SharedPreferences sharedPreferences;
@@ -83,11 +105,13 @@ public class MainActivity extends AppCompatActivity {
     private String[] fontColorArray;
     private String[] bgColorArray;
 
+
     private int loadedFontColorPos;
     private int loadedBgColorPos;
     private String loadedSavedText;
     private boolean isLoadedTextTemplate;
     private String loadedCustomTemplateString;
+
 
     private AlertDialog helpDialog;
 
@@ -117,14 +141,54 @@ public class MainActivity extends AppCompatActivity {
         sliderBackgroundOpacity = findViewById(R.id.slider_background_opacity);
         sliderCornerRadius = findViewById(R.id.slider_corner_radius);
 
+        // Lock Position UI
+        switchLockPosition = findViewById(R.id.switch_lock_position);
+
+        // --- Zikr Mode UI ---
+        switchZikrMode = findViewById(R.id.switch_zikr_mode);
+        cardZikrSettings = findViewById(R.id.card_zikr_settings);
+        sliderZikrDuration = findViewById(R.id.slider_zikr_duration);
+        labelZikrDuration = findViewById(R.id.label_zikr_duration_text);
+        zikrListContainer = findViewById(R.id.zikr_list_container); // নতুন
+        btnAddNewZikr = findViewById(R.id.btn_add_new_zikr); // নতুন
+        // --- Zikr Mode UI শেষ ---
+
+
         registerOverlayPermissionLauncher();
 
+        // --- Zikr Mode ডিফল্ট তালিকা সেটআপ ---
+        setupDefaultZikrList();
+        // --- Zikr Mode শেষ ---
+
+        loadAndDisplayZikrList(); // যিকির তালিকা UI-তে লোড করি (ক্র্যাশ ফিক্স এখানে)
         loadSettings();
         setupSpinners();
         setupListeners();
 
         checkFirstLaunch();
+
+        // --- Zikr Mode UI আপডেট ---
+        updateZikrModeUI();
+        // --- Zikr Mode শেষ ---
     }
+
+    // --- Zikr Mode: ডিফল্ট তালিকা সেভ করার মেথড (আপডেটেড) ---
+    private void setupDefaultZikrList() {
+        // চেক করি তালিকি আগে থেকেই আছে কিনা
+        if (!sharedPreferences.contains(KEY_ZIKR_LIST)) {
+            String delimiter = ZIKR_DELIMITER;
+            StringBuilder sb = new StringBuilder();
+            sb.append(getString(R.string.zikr_default_1)).append(delimiter);
+            sb.append(getString(R.string.zikr_default_2)).append(delimiter);
+            sb.append(getString(R.string.zikr_default_3)).append(delimiter);
+            sb.append(getString(R.string.zikr_default_4)).append(delimiter);
+            sb.append(getString(R.string.zikr_default_5));
+
+            sharedPreferences.edit().putString(KEY_ZIKR_LIST, sb.toString()).apply();
+        }
+    }
+    // --- Zikr Mode শেষ ---
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -144,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    // --- এই মেথডটি ঠিক করা হয়েছে ---
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
@@ -152,24 +215,20 @@ public class MainActivity extends AppCompatActivity {
             showLanguagePicker();
             return true;
         } else if (itemId == R.id.action_share) {
-            // --- নতুন শেয়ার লজিক ---
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
             shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text));
             startActivity(Intent.createChooser(shareIntent, getString(R.string.action_share)));
             return true;
-            // --- শেয়ার লজিক শেষ ---
         } else if (itemId == R.id.action_help) {
-            // --- ফিক্স: পারমিশন চেক করে ডায়ালগ কল করা ---
             boolean hasDisplay = (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) || Settings.canDrawOverlays(this);
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
             boolean hasBattery = (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) || pm.isIgnoringBatteryOptimizations(getPackageName());
 
             showHelpDialog(hasDisplay, hasBattery);
             return true;
-            // --- ফিক্স শেষ ---
         } else if (itemId == R.id.action_github) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/purevisionapp"));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https.t.me/purevisionapp"));
             startActivity(browserIntent);
             return true;
         }
@@ -193,8 +252,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupSpinners() {
+        // Template Spinner
         templateArray = getResources().getStringArray(R.array.text_templates);
         ArrayAdapter<String> templateAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, templateArray);
+        spinnerTemplates.setAdapter(templateAdapter);
 
         if (isLoadedTextTemplate) {
             spinnerTemplates.setText(loadedSavedText, false);
@@ -203,20 +264,20 @@ public class MainActivity extends AppCompatActivity {
             spinnerTemplates.setText(loadedCustomTemplateString, false);
             textLayoutCustom.setVisibility(View.VISIBLE);
         }
-        spinnerTemplates.setAdapter(templateAdapter);
 
+        // Font Color Spinner
         fontColorArray = getResources().getStringArray(R.array.font_colors);
         ArrayAdapter<String> fontColorAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, fontColorArray);
-
-        spinnerFontColor.setText(fontColorArray[loadedFontColorPos], false);
         spinnerFontColor.setAdapter(fontColorAdapter);
+        spinnerFontColor.setText(fontColorArray[loadedFontColorPos], false);
 
+        // Background Color Spinner
         bgColorArray = getResources().getStringArray(R.array.background_colors);
         ArrayAdapter<String> backgroundColorAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, bgColorArray);
-
-        spinnerBackgroundColor.setText(bgColorArray[loadedBgColorPos], false);
         spinnerBackgroundColor.setAdapter(backgroundColorAdapter);
+        spinnerBackgroundColor.setText(bgColorArray[loadedBgColorPos], false);
     }
+
 
     private void setupListeners() {
         serviceSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -227,6 +288,27 @@ public class MainActivity extends AppCompatActivity {
             }
             saveServiceState(isChecked);
         });
+
+        // Lock Position Switch
+        switchLockPosition.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            saveSettingsAndNotifyService();
+        });
+
+        // --- Zikr Mode Listeners ---
+        switchZikrMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            updateZikrModeUI();
+            saveSettingsAndNotifyService(); // যিকির মোড চালু/বন্ধ করলে সাথে সাথে সেভ
+        });
+
+        sliderZikrDuration.addOnChangeListener((slider, value, fromUser) -> {
+            updateZikrDurationLabel(value);
+        });
+
+        btnAddNewZikr.setOnClickListener(v -> {
+            addNewZikrItemView(""); // একটি খালি যিকির আইটেম যোগ করি
+        });
+        // --- Zikr Mode Listeners শেষ ---
+
 
         spinnerTemplates.setOnItemClickListener((parent, view, position, id) -> {
             String selectedTemplate = (String) parent.getItemAtPosition(position);
@@ -240,6 +322,7 @@ public class MainActivity extends AppCompatActivity {
                 saveSettingsAndNotifyService();
             }
         });
+
 
         spinnerFontColor.setOnItemClickListener((parent, view, position, id) -> {
             sharedPreferences.edit().putInt(KEY_FONT_COLOR, position).apply();
@@ -274,17 +357,142 @@ public class MainActivity extends AppCompatActivity {
         sliderTextOpacity.addOnSliderTouchListener(sliderSaveListener);
         sliderBackgroundOpacity.addOnSliderTouchListener(sliderSaveListener);
         sliderCornerRadius.addOnSliderTouchListener(sliderSaveListener);
+        sliderZikrDuration.addOnSliderTouchListener(sliderSaveListener); // Zikr স্লাইডার সেভ
     }
+
+    // --- Zikr Mode: UI দেখানোর মেথড ---
+    private void updateZikrModeUI() {
+        boolean isZikrEnabled = switchZikrMode.isChecked();
+
+        // যিকির মোড চালু হলে, সাধারণ টেক্সট সেটিংস কার্ডটি হাইড করুন
+        findViewById(R.id.card_text_settings).setVisibility(isZikrEnabled ? View.GONE : View.VISIBLE);
+        // এবং যিকির সেটিংস কার্ড দেখান
+        cardZikrSettings.setVisibility(isZikrEnabled ? View.VISIBLE : View.GONE);
+    }
+    // --- Zikr Mode শেষ ---
+
+    // --- Zikr Mode: স্লাইডার লেবেল আপডেটের মেথড ---
+    private void updateZikrDurationLabel(float value) {
+        String label = getString(R.string.label_zikr_duration) + ": " + (int) value + " " + getString(R.string.label_seconds);
+        labelZikrDuration.setText(label);
+    }
+    // --- Zikr Mode শেষ ---
+
+    // --- Zikr Mode: নতুন যিকির আইটেম UI-তে যোগ করার মেথড ---
+    private void addNewZikrItemView(String zikrText) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        // নতুন লেআউট ফাইলটি ইনফ্ল্যাট করি
+        View zikrItemView = inflater.inflate(R.layout.item_zikr_edit, zikrListContainer, false);
+
+        TextInputEditText editText = zikrItemView.findViewById(R.id.edit_text_zikr_item);
+        Button deleteButton = zikrItemView.findViewById(R.id.btn_delete_zikr_item);
+
+        editText.setText(zikrText);
+
+        deleteButton.setOnClickListener(v -> {
+            // অ্যানিমেশন দিয়ে ভিউটি রিমুভ করি
+            zikrItemView.animate().alpha(0).setDuration(300).withEndAction(() -> {
+                zikrListContainer.removeView(zikrItemView);
+                // নোট: সেভ হবে শুধু 'onPause' বা 'onStopTrackingTouch' এ
+            }).start();
+        });
+
+        // কন্টেইনারে নতুন ভিউটি যোগ করি
+        zikrListContainer.addView(zikrItemView);
+    }
+    // --- Zikr Mode শেষ ---
+
+    // --- Zikr Mode: সেভ করা তালিকা লোড করে UI-তে দেখানোর মেথড (ক্র্যাশ ফিক্স) ---
+    private void loadAndDisplayZikrList() {
+        zikrListContainer.removeAllViews(); // শুরু করার আগে পুরনো ভিউগুলো পরিষ্কার করি
+        String zikrString;
+
+        try {
+            // 1. প্রথমে String হিসেবে পড়ার চেষ্টা করি (নতুন ফরম্যাট)
+            zikrString = sharedPreferences.getString(KEY_ZIKR_LIST, "");
+        } catch (ClassCastException e) {
+            // 2. যদি ClassCastException হয়, তার মানে এটি পুরনো HashSet ফরম্যাটে আছে
+            Set<String> oldZikrSet = sharedPreferences.getStringSet(KEY_ZIKR_LIST, null);
+
+            if (oldZikrSet != null) {
+                // 3. পুরনো Set-কে নতুন String ফরম্যাটে রূপান্তর করি
+                StringBuilder sb = new StringBuilder();
+                for (String zikr : oldZikrSet) {
+                    sb.append(zikr).append(ZIKR_DELIMITER);
+                }
+                zikrString = sb.toString();
+                if (zikrString.endsWith(ZIKR_DELIMITER)) {
+                    zikrString = zikrString.substring(0, zikrString.length() - ZIKR_DELIMITER.length());
+                }
+
+                // 4. নতুন String ফরম্যাটে সেভ করি (ডেটা মাইগ্রেশন)
+                sharedPreferences.edit().putString(KEY_ZIKR_LIST, zikrString).apply();
+            } else {
+                zikrString = ""; // যদি কিছু না পাওয়া যায়
+            }
+        }
+
+        if (zikrString == null || zikrString.isEmpty()) {
+            // যদি কোনো সেভ করা যিকির না থাকে (বা মাইগ্রেশনের পরেও খালি থাকে)
+            setupDefaultZikrList(); // ডিফল্ট তালিকা সেটআপ করি
+            zikrString = sharedPreferences.getString(KEY_ZIKR_LIST, ""); // ডিফল্ট তালিকা আবার লোড করি
+        }
+
+        // সেভ করা স্ট্রিং-কে ডিলিমিটার দিয়ে ভাগ করি
+        String[] zikrArray = zikrString.split(ZIKR_DELIMITER);
+        for (String zikr : zikrArray) {
+            if (zikr != null && !zikr.trim().isEmpty()) {
+                addNewZikrItemView(zikr); // প্রতিটি যিকিরের জন্য একটি করে এডিট ভিউ যোগ করি
+            }
+        }
+    }
+    // --- Zikr Mode শেষ ---
+
 
     private void saveSettingsAndNotifyService() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putString(KEY_OVERLAY_TEXT, editTextCustom.getText().toString());
+        // --- Zikr Mode সেভ ---
+        boolean isZikrEnabled = switchZikrMode.isChecked();
+        editor.putBoolean(KEY_ZIKR_MODE_ENABLED, isZikrEnabled);
+        editor.putInt(KEY_ZIKR_DURATION, (int) sliderZikrDuration.getValue());
+
+        // --- যিকির তালিকা UI থেকে পড়ে সেভ করি ---
+        StringBuilder zikrBuilder = new StringBuilder();
+        int childCount = zikrListContainer.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View zikrItemView = zikrListContainer.getChildAt(i);
+            TextInputEditText editText = zikrItemView.findViewById(R.id.edit_text_zikr_item);
+            if (editText != null) {
+                String zikrText = editText.getText().toString().trim();
+
+                if (!zikrText.isEmpty()) {
+                    zikrBuilder.append(zikrText);
+                    zikrBuilder.append(ZIKR_DELIMITER);
+                }
+            }
+        }
+
+        String zikrListString = zikrBuilder.toString();
+        if (zikrListString.endsWith(ZIKR_DELIMITER)) {
+            zikrListString = zikrListString.substring(0, zikrListString.length() - ZIKR_DELIMITER.length());
+        }
+        editor.putString(KEY_ZIKR_LIST, zikrListString);
+        // --- যিকির তালিকা সেভ শেষ ---
+
+        // যদি যিকির মোড চালু না থাকে, তবেই সাধারণ টেক্সট সেভ করুন
+        if (!isZikrEnabled) {
+            editor.putString(KEY_OVERLAY_TEXT, editTextCustom.getText().toString());
+        }
+
         editor.putInt(KEY_FONT_SIZE, (int) sliderFontSize.getValue());
         editor.putInt(KEY_OPACITY, (int) sliderTextOpacity.getValue());
         editor.putBoolean(KEY_BACKGROUND_ENABLED, switchBackgroundEnabled.isChecked());
         editor.putInt(KEY_BACKGROUND_OPACITY, (int) sliderBackgroundOpacity.getValue());
         editor.putInt(KEY_CORNER_RADIUS, (int) sliderCornerRadius.getValue());
+
+        // Lock Position সেভ
+        editor.putBoolean(KEY_POSITION_LOCKED, switchLockPosition.isChecked());
 
         editor.apply();
 
@@ -307,7 +515,18 @@ public class MainActivity extends AppCompatActivity {
     private void loadSettings() {
         serviceSwitch.setChecked(sharedPreferences.getBoolean(KEY_SERVICE_ENABLED, false));
 
-        loadedSavedText = sharedPreferences.getString(KEY_OVERLAY_TEXT, "Allah (ﷲ) is watching me");
+        // Lock Position লোড
+        switchLockPosition.setChecked(sharedPreferences.getBoolean(KEY_POSITION_LOCKED, false));
+
+        // --- Zikr Mode লোড ---
+        switchZikrMode.setChecked(sharedPreferences.getBoolean(KEY_ZIKR_MODE_ENABLED, false));
+        float zikrDuration = sharedPreferences.getInt(KEY_ZIKR_DURATION, 5); // ডিফল্ট ১০ সেকেন্ড
+        sliderZikrDuration.setValue(zikrDuration);
+        updateZikrDurationLabel(zikrDuration); // লেবেল আপডেট
+        // --- Zikr Mode শেষ ---
+
+        // ****** পরিবর্তন ১: ডিফল্ট টেক্সট "আল্লাহ (ﷲ) আমাকে দেখছেন" করা হয়েছে ******
+        loadedSavedText = sharedPreferences.getString(KEY_OVERLAY_TEXT, "আল্লাহ (ﷲ) আমাকে দেখছেন");
         editTextCustom.setText(loadedSavedText);
 
         List<String> templates = Arrays.asList(getResources().getStringArray(R.array.text_templates));
@@ -321,12 +540,18 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        sliderFontSize.setValue(sharedPreferences.getInt(KEY_FONT_SIZE, 14));
+        // ****** পরিবর্তন ২: ডিফল্ট ফন্ট সাইজ 16 করা হয়েছে ******
+        sliderFontSize.setValue(sharedPreferences.getInt(KEY_FONT_SIZE, 16));
         sliderTextOpacity.setValue(sharedPreferences.getInt(KEY_OPACITY, 100));
-        sliderBackgroundOpacity.setValue(sharedPreferences.getInt(KEY_BACKGROUND_OPACITY, 100));
-        sliderCornerRadius.setValue(sharedPreferences.getInt(KEY_CORNER_RADIUS, 8));
 
-        boolean bgEnabled = sharedPreferences.getBoolean(KEY_BACKGROUND_ENABLED, false);
+        // ****** পরিবর্তন ৩: ডিফল্ট ব্যাকগ্রাউন্ড অপাসিটি 85 করা হয়েছে ******
+        sliderBackgroundOpacity.setValue(sharedPreferences.getInt(KEY_BACKGROUND_OPACITY, 93));
+
+        // ****** পরিবর্তন ৪: ডিফল্ট কর্নার রেডিয়াস 4 করা হয়েছে ******
+        sliderCornerRadius.setValue(sharedPreferences.getInt(KEY_CORNER_RADIUS, 4));
+
+        // ****** পরিবর্তন ৫: ডিফল্ট ব্যাকগ্রাউন্ড চালু (true) করা হয়েছে ******
+        boolean bgEnabled = sharedPreferences.getBoolean(KEY_BACKGROUND_ENABLED, true);
         switchBackgroundEnabled.setChecked(bgEnabled);
         findViewById(R.id.text_layout_background_color).setEnabled(bgEnabled);
         findViewById(R.id.slider_background_opacity).setEnabled(bgEnabled);
@@ -354,7 +579,6 @@ public class MainActivity extends AppCompatActivity {
         if(loadedBgColorPos >= bgColorArray.length) loadedBgColorPos = 0;
     }
 
-    // --- এই মেথডটি ঠিক করা হয়েছে ---
     @Override
     protected void onResume() {
         super.onResume();
@@ -364,7 +588,6 @@ public class MainActivity extends AppCompatActivity {
             showRestrictedPermissionGuideDialog();
             shouldShowPermissionDialog = false;
         } else {
-            // --- ফিক্স: এখানে checkAndShowPermissionGuide() কল করা হবে ---
             checkAndShowPermissionGuide();
         }
     }
@@ -372,7 +595,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        saveSettingsAndNotifyService();
+        saveSettingsAndNotifyService(); // অ্যাপ Pause হলেই সব সেটিংস (যিকির তালিকাসহ) সেভ করি
     }
 
 
@@ -487,9 +710,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // --- এই মেথডটি নতুন যোগ করা হয়েছে (Error 2 ফিক্স) ---
     private void checkAndShowPermissionGuide() {
-        // যদি হেল্প ডায়ালগ আগে থেকেই খোলা থাকে, তবে আবার দেখানোর দরকার নেই
         if (helpDialog != null && helpDialog.isShowing()) {
             return;
         }
@@ -503,12 +724,10 @@ public class MainActivity extends AppCompatActivity {
             hasBatteryPerm = pm.isIgnoringBatteryOptimizations(getPackageName());
         }
 
-        // যদি দুটি পারমিশনই দেওয়া থাকে, তবে কিছুই দেখানোর দরকার নেই
         if (hasDisplayPerm && hasBatteryPerm) {
             return;
         }
 
-        // যদি কোনো একটি পারমিশন না থাকে, তবে গাইড দেখাই
         showHelpDialog(hasDisplayPerm, hasBatteryPerm);
     }
 
@@ -539,7 +758,7 @@ public class MainActivity extends AppCompatActivity {
                 btnBattery.setEnabled(false);
             } else {
                 btnBattery.setText(getString(R.string.button_battery_permission));
-                btnBattery.setEnabled(true);
+                btnDisplay.setEnabled(true);
             }
         }
 
@@ -565,10 +784,7 @@ public class MainActivity extends AppCompatActivity {
             helpDialog.dismiss();
         });
 
-        // "Close" বাটন
         builder.setNegativeButton(R.string.app_permission_dialog_button_cancel, (dialog, which) -> dialog.dismiss());
-
-        // "Video Tutorial" বাটন
         builder.setNeutralButton(R.string.button_video_tutorial, (dialog, which) -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/purevisionapp/8"));
             startActivity(browserIntent);

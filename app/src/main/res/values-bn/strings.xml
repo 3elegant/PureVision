@@ -11,7 +11,8 @@
 
     <string name="button_video_tutorial">ভিডিও টিউটোরিয়াল দেখুন</string>
 
-    <string name="label_enable_service">Pure Vision চালু করুন</string>
+    <string name="label_enable_service">PureVision চালু করুন</string>
+    <string name="label_lock_position">টেক্সট পজিশন লক করুন</string>
     <string name="label_custom_text">কাস্টম টেক্সট</string>
     <string name="hint_enter_text">এখানে আপনার টেক্সট লিখুন</string>
     <string name="label_templates">টেমপ্লেট বেছে নিন</string>
@@ -67,4 +68,21 @@
     <string name="title_battery_permission">২. ব্যাটারি অপ্টিমাইজেশন (গুরুত্বপূর্ণ)</string>
     <string name="desc_battery_permission">সার্ভিসটি যেন ২৪/৭ চালু থাকে এবং আপনার ফোন সিস্টেম এটিকে বন্ধ করে না দেয়, তা নিশ্চিত করতে অনুগ্রহ করে ব্যাটারি ব্যবহার \'Unrestricted\' (সীমাহীন) সেট করুন।</string>
     <string name="button_battery_permission">ব্যাটারি সেটিংসে যান</string>
+
+    <string name="label_enable_zikr_mode">যিকির মোড চালু করুন</string>
+    <string name="title_zikr_mode_settings">যিকির মোড সেটিংস</string>
+    <string name="label_zikr_duration">যিকির পরিবর্তনের সময়</string>
+    <string name="label_seconds">সেকেন্ড</string>
+
+    <string name="label_zikr_list">আপনার যিকির তালিকা</string>
+    <string name="hint_enter_zikr">এখানে যিকির লিখুন</string>
+    <string name="button_delete_zikr">মুছুন</string>
+    <string name="button_add_new_zikr">নতুন যিকির যোগ করুন</string>
+
+    <string name="zikr_default_1">সুবহানাল্লাহ</string>
+    <string name="zikr_default_2">আলহামদুলিল্লাহ</string>
+    <string name="zikr_default_3">আল্লাহু আকবার</string>
+    <string name="zikr_default_4">লা ইলাহা ইল্লাল্লাহ</string>
+    <string name="zikr_default_5">আস্তাগফিরুল্লাহ</string>
+
 </resources>
