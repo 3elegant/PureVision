@@ -56,14 +56,6 @@
                         android:textColor="?attr/colorPrimary"
                         android:layout_marginBottom="16dp"/>
 
-                    **<com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/Widget.Material3.CardView.Outlined"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="12dp"
-                    app:contentPadding="12dp">**
-
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switch_service"
                         android:layout_width="match_parent"
@@ -72,7 +64,6 @@
                         android:minHeight="48dp"
                         android:textAppearance="?attr/textAppearanceTitleMedium"
                         />
-                    **</com.google.android.material.card.MaterialCardView>**
 
                     <View
                         android:layout_width="match_parent"
@@ -260,20 +251,43 @@
                         android:stepSize="1.0"
                         android:value="100.0" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/text_layout_font_color"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:hint="@string/label_text_color"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-                        <AutoCompleteTextView
-                            android:id="@+id/spinner_font_color"
-                            android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="16dp">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/text_layout_font_color"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:inputType="none"
-                            tools:ignore="LabelFor" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:layout_weight="1"
+                            android:hint="@string/label_text_color"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+                            <AutoCompleteTextView
+                                android:id="@+id/spinner_font_color"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                tools:ignore="LabelFor" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_pick_text_color"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="8dp"
+                            android:backgroundTint="?attr/colorPrimary"
+                            android:text=""
+                            android:insetLeft="0dp"
+                            android:insetTop="0dp"
+                            android:insetRight="0dp"
+                            android:insetBottom="0dp"
+                            app:strokeWidth="1dp"
+                            app:strokeColor="?attr/colorOutline"
+                            app:cornerRadius="8dp"/>
+                    </LinearLayout>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -308,20 +322,43 @@
                         android:textAppearance="?attr/textAppearanceTitleMedium"
                         />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/text_layout_background_color"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:hint="@string/label_background_color"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-                        <AutoCompleteTextView
-                            android:id="@+id/spinner_background_color"
-                            android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="16dp">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/text_layout_background_color"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:inputType="none"
-                            tools:ignore="LabelFor" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:layout_weight="1"
+                            android:hint="@string/label_background_color"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+                            <AutoCompleteTextView
+                                android:id="@+id/spinner_background_color"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                tools:ignore="LabelFor" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_pick_bg_color"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="8dp"
+                            android:backgroundTint="?attr/colorPrimary"
+                            android:text=""
+                            android:insetLeft="0dp"
+                            android:insetTop="0dp"
+                            android:insetRight="0dp"
+                            android:insetBottom="0dp"
+                            app:strokeWidth="1dp"
+                            app:strokeColor="?attr/colorOutline"
+                            app:cornerRadius="8dp"/>
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/label_bg_opacity_text"

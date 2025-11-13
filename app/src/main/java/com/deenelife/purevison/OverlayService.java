@@ -1,6 +1,6 @@
 package com.deenelife.purevison;
 
-// অ্যানিমেশন ইমপোর্টগুলো সরিয়ে ফেলা হয়েছে
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -33,7 +33,6 @@ import androidx.core.view.ViewCompat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -172,7 +171,7 @@ public class OverlayService extends Service implements View.OnTouchListener {
         // --- Zikr Mode সেটিংস লোড ---
         isZikrModeEnabled = sharedPreferences.getBoolean(MainActivity.KEY_ZIKR_MODE_ENABLED, false);
         zikrDurationSeconds = sharedPreferences.getInt(MainActivity.KEY_ZIKR_DURATION, 10);
-        loadZikrList(); // তালিকা লোড (আপডেটেড)
+        loadZikrList(); // তালিকা লোড
         // --- Zikr Mode শেষ ---
 
         // সাধারণ সেটিংস
@@ -185,30 +184,12 @@ public class OverlayService extends Service implements View.OnTouchListener {
         // Lock Position লোড
         boolean newLockState = sharedPreferences.getBoolean(MainActivity.KEY_POSITION_LOCKED, false);
 
-
-        int fontColorPos;
-        String[] fontColorArray = getResources().getStringArray(R.array.font_colors);
-        try {
-            fontColorPos = sharedPreferences.getInt(MainActivity.KEY_FONT_COLOR, 0);
-        } catch (ClassCastException e) {
-            String oldColor = sharedPreferences.getString(MainActivity.KEY_FONT_COLOR, "White");
-            fontColorPos = Math.max(0, Arrays.asList(fontColorArray).indexOf(oldColor));
-        }
-
-        int bgColorPos;
-        String[] bgColorArray = getResources().getStringArray(R.array.background_colors);
-        try {
-            bgColorPos = sharedPreferences.getInt(MainActivity.KEY_BACKGROUND_COLOR, 0);
-        } catch (ClassCastException e) {
-            String oldColor = sharedPreferences.getString(MainActivity.KEY_BACKGROUND_COLOR, "Transparent");
-            bgColorPos = Math.max(0, Arrays.asList(bgColorArray).indexOf(oldColor));
-        }
-
-        if(fontColorPos >= fontColorArray.length) fontColorPos = 0;
-        if(bgColorPos >= bgColorArray.length) bgColorPos = 0;
+        // ** পরিবর্তন ১: সরাসরি Integer কালার কোড লোড করা (Color Picker Update) **
+        int textColor = sharedPreferences.getInt(MainActivity.KEY_FONT_COLOR_INT, ContextCompat.getColor(this, android.R.color.white));
+        int backgroundColorRaw = sharedPreferences.getInt(MainActivity.KEY_BACKGROUND_COLOR_INT, Color.TRANSPARENT);
 
 
-        // --- Zikr Mode লজিক (অ্যানিমেশন ছাড়া) ---
+        // --- Zikr Mode লজিক ---
         stopZikrRotation(); // আগের টাইমার বন্ধ করি
 
         if (isZikrModeEnabled) {
@@ -228,8 +209,9 @@ public class OverlayService extends Service implements View.OnTouchListener {
         float textAlphaValue = savedTextOpacity / 100.0f;
         overlayTextView.setAlpha(textAlphaValue);
 
-        overlayTextView.setTextColor(getFontColor(fontColorPos));
-        overlayTextView.setRotation(0); // ডিফল্ট (0) সেট করা হলো
+        // ** পরিবর্তন ২: সরাসরি টেক্সট কালার সেট (Color Picker Update) **
+        overlayTextView.setTextColor(textColor);
+        overlayTextView.setRotation(0);
 
 
         try {
@@ -245,10 +227,11 @@ public class OverlayService extends Service implements View.OnTouchListener {
             backgroundDrawable.setShape(GradientDrawable.RECTANGLE);
             backgroundDrawable.setCornerRadius(dpToPx(savedCornerRadius));
 
-            int backgroundColor = getBackgroundColor(bgColorPos);
+            // ** পরিবর্তন ৩: ব্যাকগ্রাউন্ড কালার এবং অপাসিটি মার্জ করা (Color Picker Update) **
             int alpha = (int) (savedBackgroundOpacity * 2.55);
-            backgroundColor = (backgroundColor & 0x00FFFFFF) | (alpha << 24);
-            backgroundDrawable.setColor(backgroundColor);
+            int finalBackgroundColor = (backgroundColorRaw & 0x00FFFFFF) | (alpha << 24);
+
+            backgroundDrawable.setColor(finalBackgroundColor);
 
             overlayTextView.setBackground(backgroundDrawable);
             overlayTextView.setPadding(dpToPx(8), dpToPx(8), dpToPx(8), dpToPx(8));
@@ -265,18 +248,14 @@ public class OverlayService extends Service implements View.OnTouchListener {
         }
     }
 
-    // --- Zikr Mode: তালিকা লোড করার মেথড (ক্র্যাশ ফিক্স) ---
+    // --- Zikr Mode: তালিকা লোড করার মেথড ---
     private void loadZikrList() {
         String zikrString;
         try {
-            // 1. String হিসেবে পড়ার চেষ্টা করি
             zikrString = sharedPreferences.getString(MainActivity.KEY_ZIKR_LIST, "");
         } catch (ClassCastException e) {
-            // 2. ClassCastException হলে, পুরনো HashSet হিসেবে পড়ি
             Set<String> oldZikrSet = sharedPreferences.getStringSet(MainActivity.KEY_ZIKR_LIST, null);
-
             if (oldZikrSet != null) {
-                // 3. নতুন String ফরম্যাটে রূপান্তর করি
                 StringBuilder sb = new StringBuilder();
                 for (String zikr : oldZikrSet) {
                     sb.append(zikr).append(MainActivity.ZIKR_DELIMITER);
@@ -285,8 +264,6 @@ public class OverlayService extends Service implements View.OnTouchListener {
                 if (zikrString.endsWith(MainActivity.ZIKR_DELIMITER)) {
                     zikrString = zikrString.substring(0, zikrString.length() - MainActivity.ZIKR_DELIMITER.length());
                 }
-
-                // 4. নতুন ফরম্যাটে সেভ করি (মাইগ্রেশন)
                 sharedPreferences.edit().putString(MainActivity.KEY_ZIKR_LIST, zikrString).apply();
             } else {
                 zikrString = "";
@@ -314,7 +291,7 @@ public class OverlayService extends Service implements View.OnTouchListener {
     }
     // --- Zikr Mode শেষ ---
 
-    // --- Zikr Mode: টাইমার শুরু করার মেথড (অ্যানিমেশন ছাড়া) ---
+    // --- Zikr Mode: টাইমার শুরু করার মেথড ---
     private void startZikrRotation() {
         if (zikrHandler == null || zikrList == null || zikrList.isEmpty()) {
             return;
@@ -354,9 +331,7 @@ public class OverlayService extends Service implements View.OnTouchListener {
         // প্রথমবার সাথে সাথে রান করি
         zikrHandler.post(zikrRunnable);
     }
-    // --- Zikr Mode শেষ ---
-
-    // --- Zikr Mode: টাইমার বন্ধ করার মেথড (অ্যানিমেশন ছাড়া) ---
+    // --- Zikr Mode: টাইমার বন্ধ করার মেথড ---
     private void stopZikrRotation() {
         if (zikrHandler != null && zikrRunnable != null) {
             zikrHandler.removeCallbacks(zikrRunnable);
@@ -386,69 +361,6 @@ public class OverlayService extends Service implements View.OnTouchListener {
         }
     }
 
-
-    private int getFontColor(int position) {
-        String[] colors = getResources().getStringArray(R.array.font_colors);
-        String colorName = "White";
-        if (position >= 0 && position < colors.length) {
-            colorName = colors[position];
-        }
-
-        switch (colorName) {
-            case "White":
-            case "সাদা":
-                return ContextCompat.getColor(this, android.R.color.white);
-            case "Black":
-            case "কালো":
-                return ContextCompat.getColor(this, android.R.color.black);
-            case "Red":
-            case "লাল":
-                return ContextCompat.getColor(this, android.R.color.holo_red_light);
-            case "Green":
-            case "সবুজ":
-                return ContextCompat.getColor(this, android.R.color.holo_green_light);
-            case "Blue":
-            case "নীল":
-                return ContextCompat.getColor(this, android.R.color.holo_blue_light);
-            case "Yellow":
-            case "হলুদ":
-                return ContextCompat.getColor(this, android.R.color.holo_orange_light);
-            default:
-                return ContextCompat.getColor(this, android.R.color.white);
-        }
-    }
-
-    private int getBackgroundColor(int position) {
-        String[] colors = getResources().getStringArray(R.array.background_colors);
-        String colorName = "Transparent";
-        if (position >= 0 && position < colors.length) {
-            colorName = colors[position];
-        }
-
-        switch (colorName) {
-            case "Transparent":
-            case "স্বচ্ছ":
-                return Color.TRANSPARENT;
-            case "Black":
-            case "কালো":
-                return ContextCompat.getColor(this, android.R.color.black);
-            case "White":
-            case "সাদা":
-                return ContextCompat.getColor(this, android.R.color.white);
-            case "Grey":
-            case "ধূসর":
-                return ContextCompat.getColor(this, android.R.color.darker_gray);
-            case "Red":
-            case "লাল":
-                return ContextCompat.getColor(this, android.R.color.holo_red_dark);
-            case "Blue":
-            case "নীল":
-                return ContextCompat.getColor(this, android.R.color.holo_blue_dark);
-            default:
-                return Color.TRANSPARENT;
-        }
-    }
-
     private int dpToPx(int dp) {
         return (int) (dp * getResources().getDisplayMetrics().density);
     }
@@ -471,6 +383,38 @@ public class OverlayService extends Service implements View.OnTouchListener {
         mOverlayView = null;
 
         stopForeground(true);
+    }
+
+    // ** পরিবর্তন ৪: Xiaomi/Force Kill Fix - onTaskRemoved মেথড যোগ **
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        // রিসেন্ট অ্যাপ থেকে সরিয়ে দিলে সার্ভিস রিস্টার্ট করার সিগন্যাল পাঠানো
+        Intent broadcastIntent = new Intent(this, RestartReceiver.class);
+
+        // ব্রডকাস্ট পাঠানোর জন্য PendingIntent তৈরি
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            flags |= PendingIntent.FLAG_IMMUTABLE;
+        }
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this,
+                0,
+                broadcastIntent,
+                flags
+        );
+
+        // ১ সেকেন্ড পর অ্যালার্ম ম্যানেজারের মাধ্যমে রিসিভারকে কল করা হবে
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null) {
+            alarmManager.set(
+                    AlarmManager.RTC_WAKEUP,
+                    System.currentTimeMillis() + 1000,
+                    pendingIntent
+            );
+        }
+
+        super.onTaskRemoved(rootIntent);
     }
 
     private void createNotificationChannel() {

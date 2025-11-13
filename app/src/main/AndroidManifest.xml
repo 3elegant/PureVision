@@ -39,7 +39,10 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_TYPE"
                 android:value="systemAlert" />
         </service>
-
+        <receiver
+            android:name=".RestartReceiver"
+            android:enabled="true"
+            android:exported="true" />
         <receiver
             android:name=".BootCompletedReceiver"
             android:enabled="true"

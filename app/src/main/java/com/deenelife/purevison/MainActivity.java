@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 // Toolbar ইমপোর্ট
 import androidx.appcompat.widget.Toolbar;
@@ -51,6 +53,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
+import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -71,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
     public static final String KEY_CORNER_RADIUS = "CornerRadius";
     public static final String KEY_POSITION_LOCKED = "PositionLocked";
 
+    // নতুন কালার Keys (সরাসরি কালার কোড সেভ করার জন্য)
+    public static final String KEY_FONT_COLOR_INT = "FontColorInt";
+    public static final String KEY_BACKGROUND_COLOR_INT = "BackgroundColorInt";
+
     // --- Zikr Mode Keys ---
     public static final String KEY_ZIKR_MODE_ENABLED = "ZikrModeEnabled";
     public static final String KEY_ZIKR_DURATION = "ZikrDuration";
@@ -86,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
     private AutoCompleteTextView spinnerTemplates, spinnerFontColor, spinnerBackgroundColor;
     private Slider sliderFontSize, sliderTextOpacity, sliderBackgroundOpacity, sliderCornerRadius;
     private Toolbar toolbar;
+    private Button btnPickTextColor, btnPickBgColor; // কালার পিকার বাটন
 
     // --- Zikr Mode UI ---
     private SwitchMaterial switchZikrMode;
@@ -111,6 +120,10 @@ public class MainActivity extends AppCompatActivity {
     private String loadedSavedText;
     private boolean isLoadedTextTemplate;
     private String loadedCustomTemplateString;
+
+    // বর্তমান সিলেক্টেড কালার (int)
+    private int currentTextColor;
+    private int currentBackgroundColor;
 
 
     private AlertDialog helpDialog;
@@ -141,6 +154,10 @@ public class MainActivity extends AppCompatActivity {
         sliderBackgroundOpacity = findViewById(R.id.slider_background_opacity);
         sliderCornerRadius = findViewById(R.id.slider_corner_radius);
 
+        // কালার পিকার বাটন
+        btnPickTextColor = findViewById(R.id.btn_pick_text_color);
+        btnPickBgColor = findViewById(R.id.btn_pick_bg_color);
+
         // Lock Position UI
         switchLockPosition = findViewById(R.id.switch_lock_position);
 
@@ -160,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
         setupDefaultZikrList();
         // --- Zikr Mode শেষ ---
 
-        loadAndDisplayZikrList(); // যিকির তালিকা UI-তে লোড করি (ক্র্যাশ ফিক্স এখানে)
+        loadAndDisplayZikrList(); // যিকির তালিকা UI-তে লোড করি
         loadSettings();
         setupSpinners();
         setupListeners();
@@ -172,10 +189,10 @@ public class MainActivity extends AppCompatActivity {
         // --- Zikr Mode শেষ ---
     }
 
-    // --- Zikr Mode: ডিফল্ট তালিকা সেভ করার মেথড (আপডেটেড) ---
+    // --- Zikr Mode: ডিফল্ট তালিকা সেভ করার মেথড ---
     private void setupDefaultZikrList() {
-        // চেক করি তালিকি আগে থেকেই আছে কিনা
-        if (!sharedPreferences.contains(KEY_ZIKR_LIST)) {
+        String currentList = sharedPreferences.getString(KEY_ZIKR_LIST, null);
+        if (currentList == null || currentList.isEmpty()) {
             String delimiter = ZIKR_DELIMITER;
             StringBuilder sb = new StringBuilder();
             sb.append(getString(R.string.zikr_default_1)).append(delimiter);
@@ -228,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
             showHelpDialog(hasDisplay, hasBattery);
             return true;
         } else if (itemId == R.id.action_github) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https.t.me/purevisionapp"));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/purevisionapp"));
             startActivity(browserIntent);
             return true;
         }
@@ -269,13 +286,33 @@ public class MainActivity extends AppCompatActivity {
         fontColorArray = getResources().getStringArray(R.array.font_colors);
         ArrayAdapter<String> fontColorAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, fontColorArray);
         spinnerFontColor.setAdapter(fontColorAdapter);
-        spinnerFontColor.setText(fontColorArray[loadedFontColorPos], false);
+        // যদি প্রিসেট কালার হয়, তাহলে নাম দেখাই, নইলে 'কাস্টম' দেখাই
+        if (isPresetColor(currentTextColor, true)) {
+            spinnerFontColor.setText(fontColorArray[loadedFontColorPos], false);
+        } else {
+            spinnerFontColor.setText(getString(R.string.template_custom), false);
+        }
+
 
         // Background Color Spinner
         bgColorArray = getResources().getStringArray(R.array.background_colors);
         ArrayAdapter<String> backgroundColorAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, bgColorArray);
         spinnerBackgroundColor.setAdapter(backgroundColorAdapter);
-        spinnerBackgroundColor.setText(bgColorArray[loadedBgColorPos], false);
+        if (isPresetColor(currentBackgroundColor, false)) {
+            spinnerBackgroundColor.setText(bgColorArray[loadedBgColorPos], false);
+        } else {
+            spinnerBackgroundColor.setText(getString(R.string.template_custom), false);
+        }
+    }
+
+    // চেক করে কালারটি প্রিসেট লিস্টের কিনা
+    private boolean isPresetColor(int color, boolean isText) {
+        String[] arr = isText ? getResources().getStringArray(R.array.font_colors) : getResources().getStringArray(R.array.background_colors);
+        for (int i = 0; i < arr.length; i++) {
+            int c = isText ? getFontColorFromPosition(i) : getBackgroundColorFromPosition(i);
+            if (c == color) return true;
+        }
+        return false;
     }
 
 
@@ -324,10 +361,19 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        // ফন্ট কালার ড্রপডাউন লিসেনার
         spinnerFontColor.setOnItemClickListener((parent, view, position, id) -> {
             sharedPreferences.edit().putInt(KEY_FONT_COLOR, position).apply();
+            currentTextColor = getFontColorFromPosition(position);
+            btnPickTextColor.setBackgroundColor(currentTextColor); // বাটন আপডেট
             saveSettingsAndNotifyService();
         });
+
+        // ফন্ট কালার পিকার বাটন লিসেনার
+        btnPickTextColor.setOnClickListener(v -> {
+            openColorPicker(true);
+        });
+
 
         switchBackgroundEnabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
             findViewById(R.id.text_layout_background_color).setEnabled(isChecked);
@@ -335,12 +381,21 @@ public class MainActivity extends AppCompatActivity {
             findViewById(R.id.label_bg_opacity_text).setEnabled(isChecked);
             findViewById(R.id.slider_corner_radius).setEnabled(isChecked);
             findViewById(R.id.label_corner_radius_text).setEnabled(isChecked);
+            btnPickBgColor.setEnabled(isChecked); // বাটনও ডিজেবল হবে
             saveSettingsAndNotifyService();
         });
 
+        // ব্যাকগ্রাউন্ড কালার ড্রপডাউন লিসেনার
         spinnerBackgroundColor.setOnItemClickListener((parent, view, position, id) -> {
             sharedPreferences.edit().putInt(KEY_BACKGROUND_COLOR, position).apply();
+            currentBackgroundColor = getBackgroundColorFromPosition(position);
+            btnPickBgColor.setBackgroundColor(currentBackgroundColor); // বাটন আপডেট
             saveSettingsAndNotifyService();
+        });
+
+        // ব্যাকগ্রাউন্ড কালার পিকার বাটন লিসেনার
+        btnPickBgColor.setOnClickListener(v -> {
+            openColorPicker(false);
         });
 
         Slider.OnSliderTouchListener sliderSaveListener = new Slider.OnSliderTouchListener() {
@@ -358,6 +413,32 @@ public class MainActivity extends AppCompatActivity {
         sliderBackgroundOpacity.addOnSliderTouchListener(sliderSaveListener);
         sliderCornerRadius.addOnSliderTouchListener(sliderSaveListener);
         sliderZikrDuration.addOnSliderTouchListener(sliderSaveListener); // Zikr স্লাইডার সেভ
+    }
+
+    // কালার পিকার ওপেন করার মেথড
+    private void openColorPicker(boolean isTextColor) {
+        int initialColor = isTextColor ? currentTextColor : currentBackgroundColor;
+
+        new AmbilWarnaDialog(this, initialColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+            @Override
+            public void onOk(AmbilWarnaDialog dialog, int color) {
+                if (isTextColor) {
+                    currentTextColor = color;
+                    btnPickTextColor.setBackgroundColor(color);
+                    spinnerFontColor.setText(getString(R.string.template_custom), false); // কাস্টম টেক্সট দেখান
+                } else {
+                    currentBackgroundColor = color;
+                    btnPickBgColor.setBackgroundColor(color);
+                    spinnerBackgroundColor.setText(getString(R.string.template_custom), false);
+                }
+                saveSettingsAndNotifyService();
+            }
+
+            @Override
+            public void onCancel(AmbilWarnaDialog dialog) {
+                // Cancelled
+            }
+        }).show();
     }
 
     // --- Zikr Mode: UI দেখানোর মেথড ---
@@ -402,20 +483,16 @@ public class MainActivity extends AppCompatActivity {
     }
     // --- Zikr Mode শেষ ---
 
-    // --- Zikr Mode: সেভ করা তালিকা লোড করে UI-তে দেখানোর মেথড (ক্র্যাশ ফিক্স) ---
+    // --- Zikr Mode: সেভ করা তালিকা লোড করে UI-তে দেখানোর মেথড ---
     private void loadAndDisplayZikrList() {
         zikrListContainer.removeAllViews(); // শুরু করার আগে পুরনো ভিউগুলো পরিষ্কার করি
         String zikrString;
 
         try {
-            // 1. প্রথমে String হিসেবে পড়ার চেষ্টা করি (নতুন ফরম্যাট)
             zikrString = sharedPreferences.getString(KEY_ZIKR_LIST, "");
         } catch (ClassCastException e) {
-            // 2. যদি ClassCastException হয়, তার মানে এটি পুরনো HashSet ফরম্যাটে আছে
             Set<String> oldZikrSet = sharedPreferences.getStringSet(KEY_ZIKR_LIST, null);
-
             if (oldZikrSet != null) {
-                // 3. পুরনো Set-কে নতুন String ফরম্যাটে রূপান্তর করি
                 StringBuilder sb = new StringBuilder();
                 for (String zikr : oldZikrSet) {
                     sb.append(zikr).append(ZIKR_DELIMITER);
@@ -424,25 +501,21 @@ public class MainActivity extends AppCompatActivity {
                 if (zikrString.endsWith(ZIKR_DELIMITER)) {
                     zikrString = zikrString.substring(0, zikrString.length() - ZIKR_DELIMITER.length());
                 }
-
-                // 4. নতুন String ফরম্যাটে সেভ করি (ডেটা মাইগ্রেশন)
                 sharedPreferences.edit().putString(KEY_ZIKR_LIST, zikrString).apply();
             } else {
-                zikrString = ""; // যদি কিছু না পাওয়া যায়
+                zikrString = "";
             }
         }
 
         if (zikrString == null || zikrString.isEmpty()) {
-            // যদি কোনো সেভ করা যিকির না থাকে (বা মাইগ্রেশনের পরেও খালি থাকে)
-            setupDefaultZikrList(); // ডিফল্ট তালিকা সেটআপ করি
-            zikrString = sharedPreferences.getString(KEY_ZIKR_LIST, ""); // ডিফল্ট তালিকা আবার লোড করি
+            setupDefaultZikrList();
+            zikrString = sharedPreferences.getString(KEY_ZIKR_LIST, "");
         }
 
-        // সেভ করা স্ট্রিং-কে ডিলিমিটার দিয়ে ভাগ করি
         String[] zikrArray = zikrString.split(ZIKR_DELIMITER);
         for (String zikr : zikrArray) {
             if (zikr != null && !zikr.trim().isEmpty()) {
-                addNewZikrItemView(zikr); // প্রতিটি যিকিরের জন্য একটি করে এডিট ভিউ যোগ করি
+                addNewZikrItemView(zikr);
             }
         }
     }
@@ -480,7 +553,6 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(KEY_ZIKR_LIST, zikrListString);
         // --- যিকির তালিকা সেভ শেষ ---
 
-        // যদি যিকির মোড চালু না থাকে, তবেই সাধারণ টেক্সট সেভ করুন
         if (!isZikrEnabled) {
             editor.putString(KEY_OVERLAY_TEXT, editTextCustom.getText().toString());
         }
@@ -490,6 +562,10 @@ public class MainActivity extends AppCompatActivity {
         editor.putBoolean(KEY_BACKGROUND_ENABLED, switchBackgroundEnabled.isChecked());
         editor.putInt(KEY_BACKGROUND_OPACITY, (int) sliderBackgroundOpacity.getValue());
         editor.putInt(KEY_CORNER_RADIUS, (int) sliderCornerRadius.getValue());
+
+        // কালার সেভ (Integer হিসেবে)
+        editor.putInt(KEY_FONT_COLOR_INT, currentTextColor);
+        editor.putInt(KEY_BACKGROUND_COLOR_INT, currentBackgroundColor);
 
         // Lock Position সেভ
         editor.putBoolean(KEY_POSITION_LOCKED, switchLockPosition.isChecked());
@@ -525,7 +601,6 @@ public class MainActivity extends AppCompatActivity {
         updateZikrDurationLabel(zikrDuration); // লেবেল আপডেট
         // --- Zikr Mode শেষ ---
 
-        // ****** পরিবর্তন ১: ডিফল্ট টেক্সট "আল্লাহ (ﷲ) আমাকে দেখছেন" করা হয়েছে ******
         loadedSavedText = sharedPreferences.getString(KEY_OVERLAY_TEXT, "আল্লাহ (ﷲ) আমাকে দেখছেন");
         editTextCustom.setText(loadedSavedText);
 
@@ -540,17 +615,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        // ****** পরিবর্তন ২: ডিফল্ট ফন্ট সাইজ 16 করা হয়েছে ******
         sliderFontSize.setValue(sharedPreferences.getInt(KEY_FONT_SIZE, 16));
         sliderTextOpacity.setValue(sharedPreferences.getInt(KEY_OPACITY, 100));
-
-        // ****** পরিবর্তন ৩: ডিফল্ট ব্যাকগ্রাউন্ড অপাসিটি 85 করা হয়েছে ******
         sliderBackgroundOpacity.setValue(sharedPreferences.getInt(KEY_BACKGROUND_OPACITY, 93));
-
-        // ****** পরিবর্তন ৪: ডিফল্ট কর্নার রেডিয়াস 4 করা হয়েছে ******
         sliderCornerRadius.setValue(sharedPreferences.getInt(KEY_CORNER_RADIUS, 4));
 
-        // ****** পরিবর্তন ৫: ডিফল্ট ব্যাকগ্রাউন্ড চালু (true) করা হয়েছে ******
         boolean bgEnabled = sharedPreferences.getBoolean(KEY_BACKGROUND_ENABLED, true);
         switchBackgroundEnabled.setChecked(bgEnabled);
         findViewById(R.id.text_layout_background_color).setEnabled(bgEnabled);
@@ -558,7 +627,9 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.label_bg_opacity_text).setEnabled(bgEnabled);
         findViewById(R.id.slider_corner_radius).setEnabled(bgEnabled);
         findViewById(R.id.label_corner_radius_text).setEnabled(bgEnabled);
+        btnPickBgColor.setEnabled(bgEnabled);
 
+        // কালার লোড করুন (ইন্টিজার হিসেবে), যদি না থাকে তবে পজিশন থেকে ডিফল্ট নিন
         String[] fontColorArray = getResources().getStringArray(R.array.font_colors);
         try {
             loadedFontColorPos = sharedPreferences.getInt(KEY_FONT_COLOR, 0);
@@ -566,6 +637,10 @@ public class MainActivity extends AppCompatActivity {
             String oldColor = sharedPreferences.getString(KEY_FONT_COLOR, "White");
             loadedFontColorPos = Math.max(0, Arrays.asList(fontColorArray).indexOf(oldColor));
         }
+        // ডিফল্ট টেক্সট কালার সাদা
+        currentTextColor = sharedPreferences.getInt(KEY_FONT_COLOR_INT, getFontColorFromPosition(loadedFontColorPos));
+        btnPickTextColor.setBackgroundColor(currentTextColor);
+
 
         String[] bgColorArray = getResources().getStringArray(R.array.background_colors);
         try {
@@ -574,6 +649,9 @@ public class MainActivity extends AppCompatActivity {
             String oldColor = sharedPreferences.getString(KEY_BACKGROUND_COLOR, "Transparent");
             loadedBgColorPos = Math.max(0, Arrays.asList(bgColorArray).indexOf(oldColor));
         }
+        // ডিফল্ট ব্যাকগ্রাউন্ড কালার ট্রান্সপারেন্ট
+        currentBackgroundColor = sharedPreferences.getInt(KEY_BACKGROUND_COLOR_INT, getBackgroundColorFromPosition(loadedBgColorPos));
+        btnPickBgColor.setBackgroundColor(currentBackgroundColor);
 
         if(loadedFontColorPos >= fontColorArray.length) loadedFontColorPos = 0;
         if(loadedBgColorPos >= bgColorArray.length) loadedBgColorPos = 0;
@@ -595,7 +673,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        saveSettingsAndNotifyService(); // অ্যাপ Pause হলেই সব সেটিংস (যিকির তালিকাসহ) সেভ করি
+        saveSettingsAndNotifyService(); // অ্যাপ Pause হলেই সব সেটিংস সেভ করি
     }
 
 
@@ -792,5 +870,69 @@ public class MainActivity extends AppCompatActivity {
 
         helpDialog = builder.create();
         helpDialog.show();
+    }
+
+    // Helper method: পজিশন থেকে টেক্সট কালার কোড পাওয়া
+    private int getFontColorFromPosition(int position) {
+        String[] colors = getResources().getStringArray(R.array.font_colors);
+        String colorName = "White";
+        if (position >= 0 && position < colors.length) {
+            colorName = colors[position];
+        }
+
+        switch (colorName) {
+            case "White":
+            case "সাদা":
+                return ContextCompat.getColor(this, android.R.color.white);
+            case "Black":
+            case "কালো":
+                return ContextCompat.getColor(this, android.R.color.black);
+            case "Red":
+            case "লাল":
+                return ContextCompat.getColor(this, android.R.color.holo_red_light);
+            case "Green":
+            case "সবুজ":
+                return ContextCompat.getColor(this, android.R.color.holo_green_light);
+            case "Blue":
+            case "নীল":
+                return ContextCompat.getColor(this, android.R.color.holo_blue_light);
+            case "Yellow":
+            case "হলুদ":
+                return ContextCompat.getColor(this, android.R.color.holo_orange_light);
+            default:
+                return ContextCompat.getColor(this, android.R.color.white);
+        }
+    }
+
+    // Helper method: পজিশন থেকে ব্যাকগ্রাউন্ড কালার কোড পাওয়া
+    private int getBackgroundColorFromPosition(int position) {
+        String[] colors = getResources().getStringArray(R.array.background_colors);
+        String colorName = "Transparent";
+        if (position >= 0 && position < colors.length) {
+            colorName = colors[position];
+        }
+
+        switch (colorName) {
+            case "Transparent":
+            case "স্বচ্ছ":
+                return Color.TRANSPARENT;
+            case "Black":
+            case "কালো":
+                return ContextCompat.getColor(this, android.R.color.black);
+            case "White":
+            case "সাদা":
+                return ContextCompat.getColor(this, android.R.color.white);
+            case "Grey":
+            case "ধূসর":
+                return ContextCompat.getColor(this, android.R.color.darker_gray);
+            case "Red":
+            case "লাল":
+                return ContextCompat.getColor(this, android.R.color.holo_red_dark);
+            case "Blue":
+            case "নীল":
+                return ContextCompat.getColor(this, android.R.color.holo_blue_dark);
+            default:
+                return Color.TRANSPARENT;
+        }
     }
 }

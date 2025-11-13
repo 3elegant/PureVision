@@ -11,8 +11,8 @@ android {
         applicationId = "com.deenelife.purevison"
         minSdk = 23
         targetSdk = 36
-        versionCode = 3
-        versionName = "1.2"
+        versionCode = 4
+        versionName = "1.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -47,4 +47,5 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation("com.google.android.material:material:1.12.0")
+    implementation("com.github.yukuku:ambilwarna:2.0.1")
 }
