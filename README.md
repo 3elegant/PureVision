@@ -4,6 +4,7 @@ A simple, beautiful, and privacy-focused app to keep you mindful with a persiste
 
 [=> Click here to Download
 ](https://github.com/3elegant/PureVision/releases)
+
 ---
 
 ### What is Pure Vision?
