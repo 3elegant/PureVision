@@ -2,7 +2,7 @@
 
 A simple, beautiful, and privacy-focused app to keep you mindful with a persistent text overlay on your screen.
 
-[=> Click here to Download
+[=> **Click here to Download**
 ](https://github.com/3elegant/PureVision/releases)
 
 ---
