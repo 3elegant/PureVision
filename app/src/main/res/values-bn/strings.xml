@@ -24,7 +24,7 @@
     <string name="label_background_color">ব্যাকগ্রাউন্ড কালার</string>
     <string name="label_background_opacity">ব্যাকগ্রাউন্ড অপাসিটি</string>
 
-    <string name="label_language">Language</string>
+    <string name="label_language">App Language</string>
     <string name="label_privacy_assurance">গোপনীয়তা: এই অ্যাপটি ১০০% অফলাইনে চলে এবং কোনো ডেটা সংগ্রহ করে না।</string>
 
     <string name="service_notification_title">Pure Vision</string>
@@ -84,5 +84,13 @@
     <string name="zikr_default_3">আল্লাহু আকবার</string>
     <string name="zikr_default_4">লা ইলাহা ইল্লাল্লাহ</string>
     <string name="zikr_default_5">আস্তাগফিরুল্লাহ</string>
+
+    <string name="action_backup_settings">Backup Data</string>
+    <string name="action_restore_settings">Restore Data</string>
+    <string name="backup_file_name">purevision_backup.xml</string>
+    <string name="backup_success">ব্যাকআপ সফল হয়েছে</string>
+    <string name="backup_failed">ব্যাকআপ ব্যর্থ হয়েছে</string>
+    <string name="restore_success">সেটিংস রিস্টোর করা হয়েছে। অ্যাপটি রিস্টার্ট হচ্ছে।</string>
+    <string name="restore_failed">রিস্টোর ব্যর্থ হয়েছে। ফাইলটি সঠিক নয়।</string>
 
 </resources>

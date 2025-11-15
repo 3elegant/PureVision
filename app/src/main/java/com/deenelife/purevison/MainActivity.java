@@ -1,5 +1,6 @@
 package com.deenelife.purevison;
 
+import android.app.Activity; // নতুন ইমপোর্ট
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -47,6 +48,14 @@ import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+// নতুন ইমপোর্ট
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -128,6 +137,10 @@ public class MainActivity extends AppCompatActivity {
 
     private AlertDialog helpDialog;
 
+    // ব্যাকআপ ও রিস্টোর Launcher
+    private ActivityResultLauncher<Intent> backupLauncher;
+    private ActivityResultLauncher<Intent> restoreLauncher;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,6 +185,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         registerOverlayPermissionLauncher();
+        // নতুন Launcher রেজিস্টার
+        registerBackupRestoreLaunchers();
 
         // --- Zikr Mode ডিফল্ট তালিকা সেটআপ ---
         setupDefaultZikrList();
@@ -247,6 +262,12 @@ public class MainActivity extends AppCompatActivity {
         } else if (itemId == R.id.action_github) {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/purevisionapp"));
             startActivity(browserIntent);
+            return true;
+        } else if (itemId == R.id.action_backup_settings) { // নতুন
+            launchBackup();
+            return true;
+        } else if (itemId == R.id.action_restore_settings) { // নতুন
+            launchRestore();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -469,6 +490,9 @@ public class MainActivity extends AppCompatActivity {
         Button deleteButton = zikrItemView.findViewById(R.id.btn_delete_zikr_item);
 
         editText.setText(zikrText);
+
+        // *** বাগ ফিক্স: সিস্টেমকে এই EditText-এর অবস্থা সেভ করা থেকে বিরত রাখা ***
+        editText.setSaveEnabled(false);
 
         deleteButton.setOnClickListener(v -> {
             // অ্যানিমেশন দিয়ে ভিউটি রিমুভ করি
@@ -871,6 +895,129 @@ public class MainActivity extends AppCompatActivity {
         helpDialog = builder.create();
         helpDialog.show();
     }
+
+    // =================================================================
+    // নতুন: ব্যাকআপ ও রিস্টোর মেথড
+    // =================================================================
+
+    private void registerBackupRestoreLaunchers() {
+        backupLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Uri uri = result.getData().getData();
+                        if (uri != null) {
+                            if (performBackup(uri)) {
+                                Toast.makeText(this, getString(R.string.backup_success), Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(this, getString(R.string.backup_failed), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }
+        );
+
+        restoreLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Uri uri = result.getData().getData();
+                        if (uri != null) {
+                            if (performRestore(uri)) {
+                                Toast.makeText(this, getString(R.string.restore_success), Toast.LENGTH_LONG).show();
+                                // রিস্টোর সফল হলে Activity রিক্রিয়েট করি
+                                recreate();
+                            } else {
+                                Toast.makeText(this, getString(R.string.restore_failed), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }
+        );
+    }
+
+    private void launchBackup() {
+        // ব্যাকআপ নেওয়ার আগে বর্তমান সেটিংস সেভ করি
+        saveSettingsAndNotifyService();
+
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/xml"); // আমরা XML ফাইল সেভ করছি
+        intent.putExtra(Intent.EXTRA_TITLE, getString(R.string.backup_file_name));
+
+        try {
+            backupLauncher.launch(intent);
+        } catch (Exception e) {
+            Toast.makeText(this, "Cannot launch file picker", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void launchRestore() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/xml"); // শুধু XML ফাইল খুঁজতে
+
+        try {
+            restoreLauncher.launch(intent);
+        } catch (Exception e) {
+            Toast.makeText(this, "Cannot launch file picker", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean performBackup(Uri uri) {
+        File prefsFile = new File(getFilesDir().getParent(), "shared_prefs/" + SHARED_PREFS_NAME + ".xml");
+        if (!prefsFile.exists()) {
+            Toast.makeText(this, "No settings to backup.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        try (InputStream in = new FileInputStream(prefsFile);
+             OutputStream out = getContentResolver().openOutputStream(uri)) {
+
+            if (out == null) return false;
+
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean performRestore(Uri uri) {
+        // রিস্টোর করার আগে সার্ভিস বন্ধ করি যেন ফাইল কনফ্লিক্ট না হয়
+        stopOverlayService();
+
+        File prefsFile = new File(getFilesDir().getParent(), "shared_prefs/" + SHARED_PREFS_NAME + ".xml");
+
+        try (InputStream in = getContentResolver().openInputStream(uri);
+             OutputStream out = new FileOutputStream(prefsFile)) {
+
+            if (in == null) return false;
+
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            // ফাইল ইনভ্যালিড হলেও এক্সেপশন হতে পারে
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // =================================================================
+    // Helper Methods (আগের কোড)
+    // =================================================================
 
     // Helper method: পজিশন থেকে টেক্সট কালার কোড পাওয়া
     private int getFontColorFromPosition(int position) {

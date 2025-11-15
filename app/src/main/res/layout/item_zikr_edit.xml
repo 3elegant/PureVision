@@ -16,7 +16,8 @@
             android:id="@+id/edit_text_zikr_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_enter_zikr" />
+            android:hint="@string/hint_enter_zikr"
+            android:saveEnabled="false" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton

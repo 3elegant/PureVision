@@ -2,7 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
     <item
         android:id="@+id/action_version"
         android:title="v1.0.0"
@@ -22,15 +21,25 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_github"
-        android:title="Telegram Channel"
-        android:icon="@drawable/ic_open_in_new"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/action_language"
         android:title="@string/label_language"
         android:icon="@drawable/ic_language"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_backup_settings"
+        android:title="@string/action_backup_settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_restore_settings"
+        android:title="@string/action_restore_settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_github"
+        android:title="Telegram Channel"
+        android:icon="@drawable/ic_open_in_new"
+        app:showAsAction="never" />
 
 </menu>

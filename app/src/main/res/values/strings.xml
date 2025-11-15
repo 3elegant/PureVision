@@ -26,7 +26,7 @@
     <string name="label_background_color">Background Color</string>
     <string name="label_background_opacity">Background Opacity</string>
 
-    <string name="label_language">Language</string>
+    <string name="label_language">App Language</string>
     <string name="label_privacy_assurance">Privacy: This app runs 100% offline and collects no data.</string>
 
     <string name="service_notification_title">Pure Vision</string>
@@ -95,5 +95,13 @@
     <string name="zikr_default_3">Allahu Akbar</string>
     <string name="zikr_default_4">La ilaha illAllah</string>
     <string name="zikr_default_5">Astaghfirullah</string>
+
+    <string name="action_backup_settings">Backup Settings</string>
+    <string name="action_restore_settings">Restore Settings</string>
+    <string name="backup_file_name">Purevision_Backup.xml</string>
+    <string name="backup_success">Backup successful</string>
+    <string name="backup_failed">Backup failed</string>
+    <string name="restore_success">Settings restored. Please restart the app.</string>
+    <string name="restore_failed">Restore failed. Invalid file.</string>
 
 </resources>
