@@ -1,16 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/overlay_container"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#44000000"
+    android:padding="8dp">
 
     <TextView
-        android:id="@+id/overlay_text_view"
+        android:id="@+id/overlay_static_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#44000000"
-        android:padding="8dp"
+        android:gravity="center"
+        android:textAlignment="center"
         android:text="Allah is watching me"
         android:textColor="@android:color/white"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:visibility="gone" />
 
-</RelativeLayout>
+    <View
+        android:id="@+id/overlay_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="#44FFFFFF"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/overlay_zikr_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+</LinearLayout>

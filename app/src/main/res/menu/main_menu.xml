@@ -37,6 +37,12 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/action_update_app"
+        android:title="@string/action_update_app"
+        android:icon="@drawable/ic_open_in_new"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_github"
         android:title="Telegram Channel"
         android:icon="@drawable/ic_open_in_new"

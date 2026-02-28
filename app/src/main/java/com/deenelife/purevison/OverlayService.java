@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -32,7 +33,6 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -40,7 +40,10 @@ public class OverlayService extends Service implements View.OnTouchListener {
 
     private WindowManager windowManager;
     private View mOverlayView;
-    private TextView overlayTextView;
+    private LinearLayout overlayContainer;
+    private TextView staticTextView;
+    private View dividerView;
+    private TextView zikrTextView;
     private WindowManager.LayoutParams params;
     private SharedPreferences sharedPreferences;
 
@@ -49,17 +52,15 @@ public class OverlayService extends Service implements View.OnTouchListener {
     private float initialTouchX;
     private float initialTouchY;
 
-    // Lock Position ভেরিয়েবল
     private boolean isPositionLocked = false;
+    private boolean isStaticTextEnabled = true;
 
-    // --- Zikr Mode ভেরিয়েবল ---
     private Handler zikrHandler;
     private Runnable zikrRunnable;
     private List<String> zikrList;
     private int currentZikrIndex = 0;
     private boolean isZikrModeEnabled = false;
-    private int zikrDurationSeconds = 10;
-    // --- Zikr Mode শেষ ---
+    private int zikrDurationSeconds = 5;
 
     private static final String CHANNEL_ID = "OverlayServiceChannel";
     private static final int NOTIFICATION_ID = 1;
@@ -81,15 +82,16 @@ public class OverlayService extends Service implements View.OnTouchListener {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 
         mOverlayView = inflater.inflate(R.layout.overlay_layout, null);
-        overlayTextView = mOverlayView.findViewById(R.id.overlay_text_view);
+        overlayContainer = mOverlayView.findViewById(R.id.overlay_container);
+        staticTextView = mOverlayView.findViewById(R.id.overlay_static_text);
+        dividerView = mOverlayView.findViewById(R.id.overlay_divider);
+        zikrTextView = mOverlayView.findViewById(R.id.overlay_zikr_text);
+
         mOverlayView.setOnTouchListener(this);
 
-        // --- Zikr Mode Handler ---
         zikrHandler = new Handler(Looper.getMainLooper());
         zikrList = new ArrayList<>();
-        // --- Zikr Mode শেষ ---
 
-        // onCreate এ লক স্টেট লোড করি
         isPositionLocked = sharedPreferences.getBoolean(MainActivity.KEY_POSITION_LOCKED, false);
 
         int layoutFlag;
@@ -103,16 +105,15 @@ public class OverlayService extends Service implements View.OnTouchListener {
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 layoutFlag,
-                0, // ফ্ল্যাগ নিচে সেট করা হবে
+                0,
                 PixelFormat.TRANSLUCENT);
 
-        // ফ্ল্যাগ সেট করার জন্য নতুন মেথড কল করি
         updateWindowManagerFlags();
 
         int savedX = sharedPreferences.getInt(MainActivity.KEY_POS_X, 0);
         int savedY = sharedPreferences.getInt(MainActivity.KEY_POS_Y, 100);
 
-        params.gravity = Gravity.TOP | Gravity.END; // ডিফল্ট পজিশন উপরে ডানদিকে
+        params.gravity = Gravity.TOP | Gravity.END;
 
         params.x = savedX;
         params.y = savedY;
@@ -126,22 +127,16 @@ public class OverlayService extends Service implements View.OnTouchListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        String action = intent != null ? intent.getAction() : null;
 
-        if (intent != null) {
-            String action = intent.getAction();
-            if (ACTION_STOP_SERVICE.equals(action)) {
-                saveServiceState(false);
-                stopZikrRotation(); // Zikr Mode বন্ধ
-                stopForeground(true);
-                stopSelf();
-                return START_NOT_STICKY;
-            } else if (ACTION_UPDATE_SETTINGS.equals(action)) {
-                loadAndUpdateSettings();
-                return START_STICKY;
-            }
+        if (ACTION_STOP_SERVICE.equals(action)) {
+            saveServiceState(false);
+            stopZikrRotation();
+            stopForeground(true);
+            stopSelf();
+            return START_NOT_STICKY;
         }
 
-        saveServiceState(true);
         createNotificationChannel();
 
         Intent stopSelfIntent = new Intent(this, OverlayService.class);
@@ -162,64 +157,63 @@ public class OverlayService extends Service implements View.OnTouchListener {
                 .build();
 
         startForeground(NOTIFICATION_ID, notification);
+
+        if (!ACTION_UPDATE_SETTINGS.equals(action)) {
+            saveServiceState(true);
+        }
+
         loadAndUpdateSettings();
 
         return START_STICKY;
     }
 
     private void loadAndUpdateSettings() {
-        // --- Zikr Mode সেটিংস লোড ---
+        isStaticTextEnabled = sharedPreferences.getBoolean(MainActivity.KEY_STATIC_TEXT_ENABLED, true);
         isZikrModeEnabled = sharedPreferences.getBoolean(MainActivity.KEY_ZIKR_MODE_ENABLED, false);
-        zikrDurationSeconds = sharedPreferences.getInt(MainActivity.KEY_ZIKR_DURATION, 10);
-        loadZikrList(); // তালিকা লোড
-        // --- Zikr Mode শেষ ---
+        zikrDurationSeconds = sharedPreferences.getInt(MainActivity.KEY_ZIKR_DURATION, 5);
+        loadZikrList();
 
-        // সাধারণ সেটিংস
         int savedFontSize = sharedPreferences.getInt(MainActivity.KEY_FONT_SIZE, 16);
         int savedTextOpacity = sharedPreferences.getInt(MainActivity.KEY_OPACITY, 100);
         boolean isBackgroundEnabled = sharedPreferences.getBoolean(MainActivity.KEY_BACKGROUND_ENABLED, false);
         int savedBackgroundOpacity = sharedPreferences.getInt(MainActivity.KEY_BACKGROUND_OPACITY, 85);
         int savedCornerRadius = sharedPreferences.getInt(MainActivity.KEY_CORNER_RADIUS, 4);
 
-        // Lock Position লোড
         boolean newLockState = sharedPreferences.getBoolean(MainActivity.KEY_POSITION_LOCKED, false);
 
-        // ** পরিবর্তন ১: সরাসরি Integer কালার কোড লোড করা (Color Picker Update) **
         int textColor = sharedPreferences.getInt(MainActivity.KEY_FONT_COLOR_INT, ContextCompat.getColor(this, android.R.color.white));
         int backgroundColorRaw = sharedPreferences.getInt(MainActivity.KEY_BACKGROUND_COLOR_INT, Color.TRANSPARENT);
 
-
-        // --- Zikr Mode লজিক ---
-        stopZikrRotation(); // আগের টাইমার বন্ধ করি
+        stopZikrRotation();
 
         if (isZikrModeEnabled) {
-            // যিকির মোড চালু থাকলে, টাইমার শুরু করি
             startZikrRotation();
         } else {
-            // যিকির মোড বন্ধ থাকলে, সাধারণ টেক্সট দেখাই
-            String savedText = sharedPreferences.getString(MainActivity.KEY_OVERLAY_TEXT, "Allah is watching me");
-            overlayTextView.setText(savedText);
+            updateOverlayText();
         }
-        // --- Zikr Mode শেষ ---
 
+        staticTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, savedFontSize);
+        zikrTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, savedFontSize);
 
-        overlayTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, savedFontSize);
-
-        // অপাসিটি সেট করি
         float textAlphaValue = savedTextOpacity / 100.0f;
-        overlayTextView.setAlpha(textAlphaValue);
+        staticTextView.setAlpha(textAlphaValue);
+        zikrTextView.setAlpha(textAlphaValue);
 
-        // ** পরিবর্তন ২: সরাসরি টেক্সট কালার সেট (Color Picker Update) **
-        overlayTextView.setTextColor(textColor);
-        overlayTextView.setRotation(0);
+        staticTextView.setTextColor(textColor);
+        zikrTextView.setTextColor(textColor);
 
+        int dividerAlpha = (int) (textAlphaValue * 70);
+        int dividerColor = Color.argb(dividerAlpha, Color.red(textColor), Color.green(textColor), Color.blue(textColor));
+        dividerView.setBackgroundColor(dividerColor);
 
         try {
             Typeface customFont = ResourcesCompat.getFont(this, R.font.solaimanlipi);
-            overlayTextView.setTypeface(customFont);
+            staticTextView.setTypeface(customFont);
+            zikrTextView.setTypeface(customFont);
         } catch (Exception e) {
             e.printStackTrace();
-            overlayTextView.setTypeface(Typeface.DEFAULT);
+            staticTextView.setTypeface(Typeface.DEFAULT);
+            zikrTextView.setTypeface(Typeface.DEFAULT);
         }
 
         if (isBackgroundEnabled) {
@@ -227,19 +221,20 @@ public class OverlayService extends Service implements View.OnTouchListener {
             backgroundDrawable.setShape(GradientDrawable.RECTANGLE);
             backgroundDrawable.setCornerRadius(dpToPx(savedCornerRadius));
 
-            // ** পরিবর্তন ৩: ব্যাকগ্রাউন্ড কালার এবং অপাসিটি মার্জ করা (Color Picker Update) **
             int alpha = (int) (savedBackgroundOpacity * 2.55);
             int finalBackgroundColor = (backgroundColorRaw & 0x00FFFFFF) | (alpha << 24);
 
             backgroundDrawable.setColor(finalBackgroundColor);
 
-            overlayTextView.setBackground(backgroundDrawable);
-            overlayTextView.setPadding(dpToPx(8), dpToPx(8), dpToPx(8), dpToPx(8));
-            overlayTextView.setShadowLayer(0,0,0, Color.TRANSPARENT);
+            overlayContainer.setBackground(backgroundDrawable);
+            overlayContainer.setPadding(dpToPx(12), dpToPx(8), dpToPx(12), dpToPx(8));
+            staticTextView.setShadowLayer(0,0,0, Color.TRANSPARENT);
+            zikrTextView.setShadowLayer(0,0,0, Color.TRANSPARENT);
         } else {
-            overlayTextView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-            overlayTextView.setPadding(0, 0, 0, 0);
-            overlayTextView.setShadowLayer(5, 1, 1, ContextCompat.getColor(this, android.R.color.black));
+            overlayContainer.setBackgroundColor(Color.TRANSPARENT);
+            overlayContainer.setPadding(0, 0, 0, 0);
+            staticTextView.setShadowLayer(5, 1, 1, ContextCompat.getColor(this, android.R.color.black));
+            zikrTextView.setShadowLayer(5, 1, 1, ContextCompat.getColor(this, android.R.color.black));
         }
 
         if (newLockState != isPositionLocked) {
@@ -248,7 +243,50 @@ public class OverlayService extends Service implements View.OnTouchListener {
         }
     }
 
-    // --- Zikr Mode: তালিকা লোড করার মেথড ---
+    private void updateOverlayText() {
+        if (staticTextView == null || zikrTextView == null || dividerView == null) return;
+
+        boolean hasStaticText = false;
+        boolean hasZikrText = false;
+
+        if (isStaticTextEnabled) {
+            String savedText = sharedPreferences.getString(MainActivity.KEY_OVERLAY_TEXT, "Allah is watching me");
+            if (savedText != null && !savedText.trim().isEmpty()) {
+                staticTextView.setText(savedText.trim());
+                staticTextView.setVisibility(View.VISIBLE);
+                hasStaticText = true;
+            } else {
+                staticTextView.setVisibility(View.GONE);
+            }
+        } else {
+            staticTextView.setVisibility(View.GONE);
+        }
+
+        if (isZikrModeEnabled && zikrList != null && !zikrList.isEmpty()) {
+            if (currentZikrIndex >= 0 && currentZikrIndex < zikrList.size()) {
+                zikrTextView.setText(zikrList.get(currentZikrIndex));
+                zikrTextView.setVisibility(View.VISIBLE);
+                hasZikrText = true;
+            } else {
+                zikrTextView.setVisibility(View.GONE);
+            }
+        } else {
+            zikrTextView.setVisibility(View.GONE);
+        }
+
+        if (hasStaticText && hasZikrText) {
+            dividerView.setVisibility(View.VISIBLE);
+        } else {
+            dividerView.setVisibility(View.GONE);
+        }
+
+        if (!hasStaticText && !hasZikrText) {
+            overlayContainer.setVisibility(View.GONE);
+        } else {
+            overlayContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void loadZikrList() {
         String zikrString;
         try {
@@ -289,38 +327,35 @@ public class OverlayService extends Service implements View.OnTouchListener {
             zikrList.add(getString(R.string.zikr_default_1));
         }
     }
-    // --- Zikr Mode শেষ ---
 
-    // --- Zikr Mode: টাইমার শুরু করার মেথড ---
     private void startZikrRotation() {
         if (zikrHandler == null || zikrList == null || zikrList.isEmpty()) {
+            updateOverlayText();
             return;
         }
 
-        // রিস্টার্ট করার আগে পুরনোটা থামাই
         stopZikrRotation();
 
         zikrRunnable = new Runnable() {
             @Override
             public void run() {
-                if (zikrList.isEmpty() || overlayTextView == null) {
-                    return; // তালিকা খালি থাকলে বা ভিউ না থাকলে কিছু করি না
+                if (zikrTextView == null) return;
+
+                if (zikrList.isEmpty()) {
+                    updateOverlayText();
+                    return;
                 }
 
-                // ইনডেক্স ঠিক করি
                 if (currentZikrIndex >= zikrList.size() || currentZikrIndex < 0) {
                     currentZikrIndex = 0;
                 }
 
-                // টেক্সট সেট করি
-                overlayTextView.setText(zikrList.get(currentZikrIndex));
+                updateOverlayText();
 
-                // পরবর্তী ইনডেক্স রেডি করি
                 currentZikrIndex = (currentZikrIndex + 1) % zikrList.size();
 
-                // নির্দিষ্ট সময় পর আবার এই কোড রান করি
                 long durationMillis = zikrDurationSeconds * 1000L;
-                if (durationMillis < 1000) durationMillis = 1000; // সর্বনিম্ন ১ সেকেন্ড
+                if (durationMillis < 1000) durationMillis = 1000;
 
                 if (zikrHandler != null) {
                     zikrHandler.postDelayed(this, durationMillis);
@@ -328,26 +363,21 @@ public class OverlayService extends Service implements View.OnTouchListener {
             }
         };
 
-        // প্রথমবার সাথে সাথে রান করি
         zikrHandler.post(zikrRunnable);
     }
-    // --- Zikr Mode: টাইমার বন্ধ করার মেথড ---
+
     private void stopZikrRotation() {
         if (zikrHandler != null && zikrRunnable != null) {
             zikrHandler.removeCallbacks(zikrRunnable);
         }
         zikrRunnable = null;
     }
-    // --- Zikr Mode শেষ ---
-
 
     private void updateWindowManagerFlags() {
         if (isPositionLocked) {
-            // লকড: টাচ ইগনোর করবে (Click-through)
             params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
         } else {
-            // আনলকড: টাচ গ্রহণ করবে (Movable)
             params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
                     WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
         }
@@ -365,13 +395,12 @@ public class OverlayService extends Service implements View.OnTouchListener {
         return (int) (dp * getResources().getDisplayMetrics().density);
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         saveServiceState(false);
 
-        stopZikrRotation(); // Zikr Mode বন্ধ
+        stopZikrRotation();
 
         if (mOverlayView != null && windowManager != null && ViewCompat.isAttachedToWindow(mOverlayView)) {
             try {
@@ -385,13 +414,9 @@ public class OverlayService extends Service implements View.OnTouchListener {
         stopForeground(true);
     }
 
-    // ** পরিবর্তন ৪: Xiaomi/Force Kill Fix - onTaskRemoved মেথড যোগ **
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        // রিসেন্ট অ্যাপ থেকে সরিয়ে দিলে সার্ভিস রিস্টার্ট করার সিগন্যাল পাঠানো
         Intent broadcastIntent = new Intent(this, RestartReceiver.class);
-
-        // ব্রডকাস্ট পাঠানোর জন্য PendingIntent তৈরি
         int flags = PendingIntent.FLAG_UPDATE_CURRENT;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             flags |= PendingIntent.FLAG_IMMUTABLE;
@@ -404,7 +429,6 @@ public class OverlayService extends Service implements View.OnTouchListener {
                 flags
         );
 
-        // ১ সেকেন্ড পর অ্যালার্ম ম্যানেজারের মাধ্যমে রিসিভারকে কল করা হবে
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         if (alarmManager != null) {
             alarmManager.set(

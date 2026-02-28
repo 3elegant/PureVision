@@ -1,6 +1,7 @@
 <resources>
     <string name="title_service_control">সার্ভিস কন্ট্রোল</string>
-    <string name="title_text_settings">টেক্সট সেটিংস</string>
+    <string name="title_text_settings">নরমাল টেক্সট সেটিংস</string>
+    <string name="title_text_appearance">টেক্সট স্টাইল ও ফন্ট</string>
     <string name="title_background_settings">ব্যাকগ্রাউন্ড সেটিংস</string>
     <string name="title_app_settings">অ্যাপ সেটিংস</string>
 
@@ -12,7 +13,16 @@
     <string name="button_video_tutorial">ভিডিও টিউটোরিয়াল দেখুন</string>
 
     <string name="label_enable_service">PureVision চালু করুন</string>
+
     <string name="label_lock_position">টেক্সট পজিশন লক করুন</string>
+    <string name="desc_lock_position">স্ক্রিনে টেক্সটের অবস্থান লক করবে এবং টেক্সটের ওপর দিয়ে ক্লিক করা যাবে।</string>
+
+    <string name="label_enable_static_text">নরমাল টেক্সট চালু করুন</string>
+    <string name="desc_normal_text">স্ক্রিনে সবসময় একটি নির্দিষ্ট টেক্সট দেখাবে।</string>
+
+    <string name="label_enable_zikr_mode">যিকির মোড চালু করুন</string>
+    <string name="desc_zikr_mode">নির্দিষ্ট সময় পরপর স্ক্রিনের টেক্সট পরিবর্তন হয়ে নতুন যিকির দেখাবে।</string>
+
     <string name="label_custom_text">কাস্টম টেক্সট</string>
     <string name="hint_enter_text">এখানে আপনার টেক্সট লিখুন</string>
     <string name="label_templates">টেমপ্লেট বেছে নিন</string>
@@ -35,7 +45,7 @@
     <string name="app_permission_dialog_message">অ্যান্ড্রয়েড ১৩+ ভার্সনে, APK থেকে ইন্সটল করা অ্যাপের জন্য এই পারমিশনটি ডিফল্টরূপে ব্লক করা থাকে।\n\nএটি চালু করতে, আপনাকে ম্যানুয়ালি \'Restricted settings\' চালু করতে হবে।\n\n\'OK\' বাটন চাপলে আপনাকে \'App Info\' পেজে নিয়ে যাওয়া হবে।\n\nসেখানে গিয়ে যা করবেন:\n১. উপরের তিন-ডট (...) মেনুতে ক্লিক করুন।\n২. \'Allow restricted settings\' সিলেক্ট করুন এবং PIN দিয়ে কনফার্ম করুন।\n৩. এরপর অ্যাপে ফিরে এসে আবার সার্ভিসটি চালু করার চেষ্টা করুন।</string>
     <string name="app_permission_dialog_button_ok">OK, App Info-তে চলো</string>
     <string name="app_permission_dialog_button_cancel">Cancel</string>
-    <string name="app_permission_denied_toast">পারমিশন ছাড়া সার্ভিস চালু হবে না</string>
+    <string name="app_permission_denied_toast">পারমিশন ছাড়া সার্ভিস চালু হবেবিধা</string>
 
     <string name="template_custom">কাস্টম...</string>
 
@@ -69,7 +79,6 @@
     <string name="desc_battery_permission">সার্ভিসটি যেন ২৪/৭ চালু থাকে এবং আপনার ফোন সিস্টেম এটিকে বন্ধ করে না দেয়, তা নিশ্চিত করতে অনুগ্রহ করে ব্যাটারি ব্যবহার \'Unrestricted\' (সীমাহীন) সেট করুন।</string>
     <string name="button_battery_permission">ব্যাটারি সেটিংসে যান</string>
 
-    <string name="label_enable_zikr_mode">যিকির মোড চালু করুন</string>
     <string name="title_zikr_mode_settings">যিকির মোড সেটিংস</string>
     <string name="label_zikr_duration">যিকির পরিবর্তনের সময়</string>
     <string name="label_seconds">সেকেন্ড</string>
@@ -92,5 +101,9 @@
     <string name="backup_failed">ব্যাকআপ ব্যর্থ হয়েছে</string>
     <string name="restore_success">সেটিংস রিস্টোর করা হয়েছে। অ্যাপটি রিস্টার্ট হচ্ছে।</string>
     <string name="restore_failed">রিস্টোর ব্যর্থ হয়েছে। ফাইলটি সঠিক নয়।</string>
+
+    <string name="action_reset">রিসেট</string>
+
+    <string name="action_update_app">Update App</string>
 
 </resources>

@@ -4,7 +4,8 @@
     <string name="app_privacy_note_short">Note: This app is 100% offline, safe, and does not collect any data.</string>
 
     <string name="title_service_control">Service Control</string>
-    <string name="title_text_settings">Text Settings</string>
+    <string name="title_text_settings">Normal Text Settings</string>
+    <string name="title_text_appearance">Text Style &amp; Font</string>
     <string name="title_background_settings">Background Settings</string>
     <string name="title_app_settings">App Settings</string>
 
@@ -14,7 +15,16 @@
     <string name="button_video_tutorial">Watch Video Tutorial</string>
 
     <string name="label_enable_service">Enable Pure Vision Service</string>
-    <string name="label_lock_position">Lock Position (Enable Click-through)</string>
+
+    <string name="label_lock_position">Lock Position</string>
+    <string name="desc_lock_position">Locks the text in place and allows clicks to pass through it.</string>
+
+    <string name="label_enable_static_text">Enable Normal Text</string>
+    <string name="desc_normal_text">Displays a fixed text permanently on the screen.</string>
+
+    <string name="label_enable_zikr_mode">Enable Zikr Mode</string>
+    <string name="desc_zikr_mode">Periodically changes the text to show different Zikrs.</string>
+
     <string name="label_custom_text">Custom Text</string>
     <string name="hint_enter_text">Enter your text here</string>
     <string name="label_templates">Select Template</string>
@@ -79,7 +89,6 @@
     <string name="desc_battery_permission">To ensure the service runs 24/7 and is not stopped by your phone, please set battery usage to \'Unrestricted\'.</string>
     <string name="button_battery_permission">Go to Battery Settings</string>
 
-    <string name="label_enable_zikr_mode">Enable Zikr Mode</string>
     <string name="title_zikr_mode_settings">Zikr Mode Settings</string>
     <string name="label_zikr_duration">Zikr Change Duration</string>
     <string name="label_seconds">sec</string>
@@ -88,7 +97,6 @@
     <string name="hint_enter_zikr">Enter Zikr here</string>
     <string name="button_delete_zikr">Delete</string>
     <string name="button_add_new_zikr">Add New Zikr</string>
-
 
     <string name="zikr_default_1">SubhanAllah</string>
     <string name="zikr_default_2">Alhamdulillah</string>
@@ -103,5 +111,9 @@
     <string name="backup_failed">Backup failed</string>
     <string name="restore_success">Settings restored. Please restart the app.</string>
     <string name="restore_failed">Restore failed. Invalid file.</string>
+
+    <string name="action_reset">Reset</string>
+
+    <string name="action_update_app">Update App</string>
 
 </resources>

@@ -9,7 +9,7 @@ import android.util.Log;
 public class RestartReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        // সার্ভিসটি পুনরায় চালু করার লজিক
+
         Intent serviceIntent = new Intent(context, OverlayService.class);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
