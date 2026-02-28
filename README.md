@@ -1,4 +1,4 @@
-# PureVision v1.3
+# PureVision v1.4
 
 A simple, beautiful, and privacy-focused app to keep you mindful with a persistent text overlay on your screen.
 
@@ -56,6 +56,6 @@ We believe in privacy. This app is built with your trust in mind:
 
 ### Installation
 
-1.  Download the `PureVision-v1.3.apk` file from the assets below.
+1.  Download the `PureVision-v1.4.apk` file from the assets below.
 2.  Install the APK on your Android device.
 3.  Launch the app and grant the "Display over other apps" permission when prompted.
