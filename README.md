@@ -1,12 +1,12 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/3elegant/PureVision/master/app/src/main/ic_launcher-playstore.png" alt="PureVision Logo" width="180"/>
   
-  <h1>✨ PureVision</h1>
+  <h1>PureVision ✨</h1>
   <p><strong>A simple, beautiful, and private app to keep your goals on your screen.</strong></p>
 
   <img src="https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android" alt="Platform">
   <img src="https://img.shields.io/badge/Privacy-100%25%20Offline-blue?style=for-the-badge" alt="Privacy">
-  <img src="https://img.shields.io/badge/Price-Free-green?style=for-the-badge" alt="Price">
+  <img src="https://img.shields.io/badge/Ads-Zero%20Ads-green?style=for-the-badge" alt="No Ads">
 </div>
 
 <br/>
@@ -15,7 +15,7 @@
 
 In a busy world, **PureVision** helps you focus on what is truly important. It shows a small, beautiful text on your screen that stays on top of other apps. 
 
-You can use it for daily goals, spiritual reminders (like "Allah is watching me"), or positive quotes. It is very easy to use, takes no extra battery, and keeps your data 100% safe. It is always there to remind you, without disturbing your work.
+You can use it for daily goals, spiritual reminders (like "Allah is watching me"), or positive quotes or zikr. It is very easy to use, takes no extra battery, and keeps your data 100% safe. It is always there to remind you, without disturbing your work.
 
 ---
 
@@ -51,10 +51,14 @@ Get the latest version of PureVision safely directly from GitHub.
 
 ## 🎥 See It In Action
 
-Watch the video tutorial below to see how PureVision works and how to set it up perfectly:
+Click the button below to watch a quick video tutorial on how PureVision works and how to set it up perfectly:
 
 <div align="center">
-  <video src="https://pub-d429991dd1f14bf6a01bc21fb642a5eb.r2.dev/purevision.mp4" controls="controls" width="80%"></video>
+  <br/>
+  <a href="https://pub-d429991dd1f14bf6a01bc21fb642a5eb.r2.dev/purevision.mp4">
+    <img src="https://img.shields.io/badge/▶_WATCH_VIDEO_TUTORIAL-FF0000?style=for-the-badge&logoColor=white" alt="Watch Video Tutorial" height="45">
+  </a>
+  <br/>
 </div>
 
 ---
@@ -70,10 +74,10 @@ Watch the video tutorial below to see how PureVision works and how to set it up 
 ## ⚙️ How to Install
 
 1. Go to our [Releases page](https://github.com/3elegant/PureVision/releases/latest).
-2. Click and download the **`PureVision.apk`** file.
+2. Click and download the **`PureVision-v1.6.apk`** file.
 3. Open the file to install it on your phone. *(If asked, allow installation from unknown sources).*
 4. Open the app and allow the **"Display over other apps"** permission.
 5. Add your text, change the style, and enjoy a focused life!
 
 ---
-<p align="center">Designed with ❤️ to help you stay mindful.</p>
+<p align="center">Built with ❤️ for a better Ummah.</p>
