@@ -74,7 +74,7 @@ Click the button below to watch a quick video tutorial on how PureVision works a
 ## ⚙️ How to Install
 
 1. Go to our [Releases page](https://github.com/3elegant/PureVision/releases/latest).
-2. Click and download the **`PureVision-v1.6.apk`** file.
+2. Click and download the **`PureVision-v1.7.apk`** file.
 3. Open the file to install it on your phone. *(If asked, allow installation from unknown sources).*
 4. Open the app and allow the **"Display over other apps"** permission.
 5. Add your text, change the style, and enjoy a focused life!
