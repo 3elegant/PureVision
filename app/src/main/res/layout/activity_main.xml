@@ -51,8 +51,8 @@
                     android:id="@+id/switch_service"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/label_enable_service"
                     android:padding="20dp"
+                    android:text="@string/label_enable_service"
                     android:textAppearance="?attr/textAppearanceTitleLarge"
                     android:textColor="?attr/colorOnPrimaryContainer"
                     app:switchTextAppearance="?attr/textAppearanceTitleLarge" />
@@ -229,6 +229,401 @@
 
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_status_bar_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.CardView.Elevated"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="16dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_status_bar_settings"
+                        android:textAppearance="?attr/textAppearanceTitleMedium"
+                        android:textColor="?attr/colorPrimary"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Method 1: Pin to Status Bar / Notch -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switch_status_bar_pin"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="32dp"
+                            android:text="@string/label_status_bar_pin"
+                            android:textAppearance="?attr/textAppearanceTitleSmall" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/desc_status_bar_pin"
+                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:paddingEnd="56dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="8dp" />
+
+                        <!-- Notch Position Controls -->
+                        <LinearLayout
+                            android:id="@+id/layout_status_bar_pin_controls"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/label_notch_mode"
+                                android:textAppearance="?attr/textAppearanceBodyMedium"
+                                android:textColor="?attr/colorPrimary"
+                                android:layout_marginBottom="8dp"/>
+
+                            <!-- Mode Selector: Below Camera Island vs Side of Notch -->
+                            <com.google.android.material.button.MaterialButtonToggleGroup
+                                android:id="@+id/toggle_notch_style"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:singleSelection="true"
+                                app:selectionRequired="true"
+                                android:layout_marginBottom="12dp">
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btn_style_island"
+                                    style="@style/Widget.Material3.Button.OutlinedButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/notch_mode_island" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btn_style_side"
+                                    style="@style/Widget.Material3.Button.OutlinedButton"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="@string/notch_mode_side" />
+                            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                            <!-- Sub-Layout 1: Below Camera Island Controls -->
+                            <LinearLayout
+                                android:id="@+id/layout_island_controls"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:visibility="visible">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/desc_notch_island"
+                                    android:textAppearance="?attr/textAppearanceBodySmall"
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    android:layout_marginBottom="8dp" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginTop="4dp">
+
+                                    <TextView
+                                        android:id="@+id/label_notch_drop_text"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="@string/label_notch_drop_distance"
+                                        android:textAppearance="?attr/textAppearanceBodySmall"
+                                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                                    <TextView
+                                        android:id="@+id/btn_reset_notch_drop"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/action_reset"
+                                        android:textAppearance="?attr/textAppearanceBodySmall"
+                                        android:textColor="?attr/colorPrimary"
+                                        android:paddingHorizontal="8dp"
+                                        android:paddingVertical="4dp"
+                                        android:background="?attr/selectableItemBackground"
+                                        android:clickable="true"
+                                        android:focusable="true"/>
+                                </LinearLayout>
+
+                                <com.google.android.material.slider.Slider
+                                    android:id="@+id/slider_notch_drop"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:valueFrom="0.0"
+                                    android:valueTo="80.0"
+                                    android:stepSize="1.0"
+                                    android:value="32.0" />
+
+                                <!-- Quick Presets for Drop -->
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_marginBottom="8dp">
+
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btn_drop_close"
+                                        style="@style/Widget.Material3.Button.TonalButton"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:textSize="11sp"
+                                        android:layout_marginEnd="4dp"
+                                        android:text="@string/action_drop_close" />
+
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btn_drop_medium"
+                                        style="@style/Widget.Material3.Button.TonalButton"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:textSize="11sp"
+                                        android:layout_marginHorizontal="2dp"
+                                        android:text="@string/action_drop_medium" />
+
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btn_drop_far"
+                                        style="@style/Widget.Material3.Button.TonalButton"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:textSize="11sp"
+                                        android:layout_marginStart="4dp"
+                                        android:text="@string/action_drop_far" />
+                                </LinearLayout>
+
+                                <!-- Horizontal Fine-Tune -->
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginTop="4dp">
+
+                                    <TextView
+                                        android:id="@+id/label_island_offset_x_text"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="@string/label_notch_offset_x"
+                                        android:textAppearance="?attr/textAppearanceBodySmall"
+                                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                                    <TextView
+                                        android:id="@+id/btn_reset_island_offset_x"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/action_reset"
+                                        android:textAppearance="?attr/textAppearanceBodySmall"
+                                        android:textColor="?attr/colorPrimary"
+                                        android:paddingHorizontal="8dp"
+                                        android:paddingVertical="4dp"
+                                        android:background="?attr/selectableItemBackground"
+                                        android:clickable="true"
+                                        android:focusable="true"/>
+                                </LinearLayout>
+
+                                <com.google.android.material.slider.Slider
+                                    android:id="@+id/slider_island_offset_x"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:valueFrom="-50.0"
+                                    android:valueTo="50.0"
+                                    android:stepSize="1.0"
+                                    android:value="0.0" />
+
+                            </LinearLayout>
+
+                            <!-- Sub-Layout 2: Side of Notch Controls -->
+                            <LinearLayout
+                                android:id="@+id/layout_side_controls"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/desc_notch_side"
+                                    android:textAppearance="?attr/textAppearanceBodySmall"
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    android:layout_marginBottom="8dp" />
+
+                                <com.google.android.material.button.MaterialButtonToggleGroup
+                                    android:id="@+id/toggle_notch_position"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    app:singleSelection="true"
+                                    app:selectionRequired="false"
+                                    android:layout_marginBottom="8dp">
+
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btn_notch_left"
+                                        style="@style/Widget.Material3.Button.OutlinedButton"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="@string/action_notch_left" />
+
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btn_notch_center"
+                                        style="@style/Widget.Material3.Button.OutlinedButton"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="@string/action_notch_center" />
+
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btn_notch_right"
+                                        style="@style/Widget.Material3.Button.OutlinedButton"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="@string/action_notch_right" />
+                                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginTop="4dp">
+
+                                    <TextView
+                                        android:id="@+id/label_notch_slider_text"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="@string/label_notch_slider"
+                                        android:textAppearance="?attr/textAppearanceBodySmall"
+                                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                                    <TextView
+                                        android:id="@+id/btn_reset_notch_position"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/action_reset"
+                                        android:textAppearance="?attr/textAppearanceBodySmall"
+                                        android:textColor="?attr/colorPrimary"
+                                        android:paddingHorizontal="8dp"
+                                        android:paddingVertical="4dp"
+                                        android:background="?attr/selectableItemBackground"
+                                        android:clickable="true"
+                                        android:focusable="true"/>
+                                </LinearLayout>
+
+                                <com.google.android.material.slider.Slider
+                                    android:id="@+id/slider_notch_position"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:valueFrom="0.0"
+                                    android:valueTo="100.0"
+                                    android:stepSize="1.0"
+                                    android:value="50.0" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginTop="8dp">
+
+                                    <TextView
+                                        android:id="@+id/label_notch_side_vertical_text"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="@string/label_notch_side_vertical"
+                                        android:textAppearance="?attr/textAppearanceBodySmall"
+                                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                                    <TextView
+                                        android:id="@+id/btn_reset_notch_side_vertical"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/action_reset"
+                                        android:textAppearance="?attr/textAppearanceBodySmall"
+                                        android:textColor="?attr/colorPrimary"
+                                        android:paddingHorizontal="8dp"
+                                        android:paddingVertical="4dp"
+                                        android:background="?attr/selectableItemBackground"
+                                        android:clickable="true"
+                                        android:focusable="true"/>
+                                </LinearLayout>
+
+                                <com.google.android.material.slider.Slider
+                                    android:id="@+id/slider_notch_side_vertical"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:valueFrom="0.0"
+                                    android:valueTo="80.0"
+                                    android:stepSize="1.0"
+                                    android:value="0.0" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="?attr/colorSurfaceVariant" />
+
+                    <!-- Method 2: Live Zikr in Notification & Lock Screen -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switch_notification_zikr"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="32dp"
+                            android:text="@string/label_notification_zikr"
+                            android:textAppearance="?attr/textAppearanceTitleSmall" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/desc_notification_zikr"
+                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:paddingEnd="56dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="4dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_text_appearance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -250,6 +645,34 @@
                         android:textAppearance="?attr/textAppearanceTitleMedium"
                         android:textColor="?attr/colorPrimary"
                         android:layout_marginBottom="16dp"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_layout_font_family"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/label_font_family"
+                        android:layout_marginBottom="12dp"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+                        <AutoCompleteTextView
+                            android:id="@+id/spinner_font_family"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none"
+                            android:saveEnabled="false"
+                            tools:ignore="LabelFor" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_pick_custom_font"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/button_pick_custom_font"
+                        android:layout_marginBottom="16dp"
+                        app:icon="@drawable/ic_open_in_new"
+                        app:iconGravity="textStart"
+                        style="@style/Widget.Material3.Button.TonalButton" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -447,6 +870,16 @@
                         android:text="@string/button_add_new_zikr"
                         android:layout_marginTop="12dp"
                         style="@style/Widget.Material3.Button.TonalButton" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_reset_default_zikr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/button_reset_default_zikr"
+                        android:layout_marginTop="8dp"
+                        app:icon="@drawable/ic_open_in_new"
+                        app:iconGravity="textStart"
+                        style="@style/Widget.Material3.Button.OutlinedButton" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

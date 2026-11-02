@@ -7,10 +7,12 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SYSTEM_ALERT" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
+        android:name=".PureVisionApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -29,6 +31,21 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_settings" />
+
+        <activity
+            android:name=".AboutActivity"
+            android:exported="false"
+            android:label="@string/title_about" />
+
+        <activity
+            android:name=".FaqActivity"
+            android:exported="false"
+            android:label="@string/title_faq" />
+
         <service
             android:name=".OverlayService"
             android:enabled="true"
@@ -42,7 +59,7 @@
         <receiver
             android:name=".RestartReceiver"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
         <receiver
             android:name=".BootCompletedReceiver"
             android:enabled="true"
@@ -51,6 +68,17 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".PureVisionTileService"
+            android:label="@string/tile_label"
+            android:icon="@drawable/ic_menu_shield"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
 
     </application>
 

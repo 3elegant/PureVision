@@ -14,7 +14,7 @@
 
     <string name="button_video_tutorial">Watch Video Tutorial</string>
 
-    <string name="label_enable_service">Enable Pure Vision Service</string>
+    <string name="label_enable_service">Enable PureVision</string>
 
     <string name="label_lock_position">Lock Position</string>
     <string name="desc_lock_position">Locks the text in place and allows clicks to pass through it.</string>
@@ -78,7 +78,7 @@
     </string-array>
 
     <string name="action_share">Share</string>
-    <string name="share_text">Download Pure Vision App => https://app.deenelife.com/purevision</string>
+    <string name="share_text">✨ PureVision - Islamic Screen Reminder &amp; Mindfulness\n\nKeep your gaze pure and remember Allah continuously throughout the day with reminders on your screen.\n\n❝ Whoever guides someone to goodness will have a reward like one who did it. ❞\n— Prophet Muhammad ﷺ (Sahih Muslim: 1893)\n\nShare this app as a Sadaqah Jariyah (continuous charity) with family &amp; friends so that their dhikr and mindfulness earn you continuous rewards!\n\n📲 Download App: https://app.deenelife.com/purevision\n📢 Telegram Channel: https://t.me/purevisionapp</string>
 
     <string name="title_help_guide">Setup Guide</string>
     <string name="title_display_permission">1. Display Over Other Apps</string>
@@ -97,6 +97,7 @@
     <string name="hint_enter_zikr">Enter Zikr here</string>
     <string name="button_delete_zikr">Delete</string>
     <string name="button_add_new_zikr">Add New Zikr</string>
+    <string name="button_reset_default_zikr">Restore Default Zikr List</string>
 
     <string name="zikr_default_1">SubhanAllah</string>
     <string name="zikr_default_2">Alhamdulillah</string>
@@ -115,5 +116,126 @@
     <string name="action_reset">Reset</string>
 
     <string name="action_update_app">Update App</string>
+
+    <!-- Font Support -->
+    <string name="label_font_family">Select Font</string>
+    <string name="font_solaimanlipi">SolaimanLipi (Bengali)</string>
+    <string name="font_amiri">Amiri (العربية / Quranic Arabic)</string>
+    <string name="font_poppins">Poppins (English / Modern)</string>
+    <string name="font_system">System Default</string>
+    <string name="font_custom">Custom Font (from File)</string>
+    <string name="button_pick_custom_font">Choose Font File (.ttf/.otf)</string>
+    <string name="custom_font_success">Custom font loaded successfully</string>
+    <string name="custom_font_failed">Invalid font file. Please select a valid .ttf or .otf file.</string>
+
+    <!-- Status Bar Settings -->
+    <string name="title_status_bar_settings">Status Bar &amp; Notch Options</string>
+    <string name="label_status_bar_pin">Pin Screen Overlay to Status Bar / Notch</string>
+    <string name="desc_status_bar_pin">Pins overlay to the top status bar/notch level. Avoids center camera cutout.</string>
+    <string name="label_notch_mode">Notch Placement Style</string>
+    <string name="notch_mode_island">Below Camera Island</string>
+    <string name="notch_mode_side">Side of Notch</string>
+    <string name="desc_notch_island">Hangs cleanly below the center camera lens in a sleek circular capsule.</string>
+    <string name="desc_notch_side">Positions text on the left or right side of the status bar.</string>
+    <string name="label_notch_drop_distance">Distance Below Camera</string>
+    <string name="action_drop_close">Close (24dp)</string>
+    <string name="action_drop_medium">Default (32dp)</string>
+    <string name="action_drop_far">Far (44dp)</string>
+    <string name="label_notch_offset_x">Center Fine-Tune (Left - Right)</string>
+    <string name="label_notch_alignment">Side Position Preset</string>
+    <string name="action_notch_left">Left</string>
+    <string name="action_notch_center">Center</string>
+    <string name="action_notch_right">Right</string>
+    <string name="label_notch_slider">Horizontal Position</string>
+    <string name="label_notch_side_vertical">Vertical Position</string>
+    <string name="label_notification_zikr">Live Zikr in Notification &amp; Lock Screen</string>
+    <string name="desc_notification_zikr">Updates and shows the current Zikr in the notification drawer and lock screen.</string>
+    <string name="toast_status_bar_only_mode">Running in Notification Only mode (Screen Overlay disabled).</string>
+
+    <!-- Quick Settings Tile -->
+    <string name="tile_label">PureVision</string>
+
+    <!-- Lock Screen Notification Permission Guidance -->
+    <string name="title_lockscreen_permission">Lock Screen Notification</string>
+    <string name="desc_lockscreen_permission">To see live Zikr on your lock screen, please ensure notifications are allowed to show on your lock screen in device settings.</string>
+    <string name="desc_lockscreen_permission_blocked">Notification permission is disabled. Please enable notifications to see live Zikr.</string>
+    <string name="button_open_notification_settings">Notification Settings</string>
+    <string name="action_got_it">Got It</string>
+
+    <!-- Background Service Notification Customization -->
+    <string name="notification_channel_service">Service Background Status</string>
+    <string name="notification_channel_service_desc">Keeps PureVision running in background. Can be hidden or silenced without affecting overlay.</string>
+    <string name="notification_channel_zikr">Live Zikr Notification</string>
+    <string name="title_hide_notification_setting">Hide / Manage Notification</string>
+    <string name="action_hide_notification_tip">Want to hide notification?</string>
+    <string name="desc_hide_notification_dialog">Android requires a background service notification by default.\n\nHowever, you can completely hide it from your notification drawer:\n1. Tap \'Open Settings\' below.\n2. Turn off the \'Service Background Status\' category.\n\nPureVision screen overlay will continue running smoothly even when hidden!</string>
+
+    <!-- Settings & About Strings -->
+    <string name="title_settings">Settings</string>
+    <string name="title_about">About PureVision</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_about">About App</string>
+    <string name="desc_settings_language">Change app interface language</string>
+    <string name="desc_settings_backup">Export settings to a backup file</string>
+    <string name="desc_settings_restore">Import settings from a backup file</string>
+    <string name="desc_settings_update">Check for the latest version on GitHub</string>
+    <string name="desc_settings_notifications">Manage system notification preferences</string>
+    <string name="desc_settings_about">App purpose, telegram community &amp; info</string>
+
+    <string name="about_tagline">Mindful focus and remembrance of Allah</string>
+    <string name="about_purpose_title">App Purpose</string>
+    <string name="about_purpose_desc">PureVision is an offline, privacy-first Islamic mindfulness and reminder companion. It helps you keep your gaze pure and your heart connected to Allah throughout daily phone usage by displaying gentle, customizable zikr and reminders on your screen.</string>
+    <string name="about_privacy_title">100% Offline &amp; Privacy First</string>
+    <string name="about_privacy_desc">PureVision runs completely on your device. It does not collect any data, has zero tracking, and requires no internet access.</string>
+    <string name="about_telegram_title">Official Telegram Channel</string>
+    <string name="about_telegram_desc">Join our community for regular updates, suggestions, discussions, and new features.</string>
+    <string name="action_join_telegram">Join Telegram Channel</string>
+    <string name="about_developer_title">Developed With Sincerity</string>
+    <string name="about_developer_desc">Made for the Muslim Ummah by DeeneLife. May Allah accept our humble efforts.</string>
+    <string name="action_visit_website">Visit DeeneLife Website</string>
+
+    <!-- Sadaqah Jariyah & Settings Items -->
+    <string name="title_settings_share">Share App (Sadaqah Jariyah)</string>
+    <string name="desc_settings_share">Share with others to earn continuous rewards</string>
+    <string name="desc_settings_help">Troubleshooting and background permission guides</string>
+    <string name="about_share_title">Share as Sadaqah Jariyah</string>
+    <string name="about_share_hadith">❝ Whoever guides someone to goodness will have a reward like one who did it. ❞\n— Prophet Muhammad ﷺ (Sahih Muslim: 1893)</string>
+    <string name="about_share_desc">PureVision is an offline, privacy-first initiative. Share this app with your friends and family as a continuous charity (Sadaqah Jariyah) so that their mindfulness and dhikr bring ongoing rewards to your account of good deeds.</string>
+    <string name="action_share_purevision">Share PureVision</string>
+
+    <!-- FAQ Strings -->
+    <string name="title_faq">Frequently Asked Questions (FAQ)</string>
+    <string name="desc_settings_faq">Common questions &amp; answers about PureVision</string>
+    <string name="desc_faq_header">Quick answers to help you get the best experience</string>
+
+    <string name="faq_q1">What is PureVision and what is its main purpose?</string>
+    <string name="faq_a1">PureVision is a 100% offline, privacy-first Islamic reminder and mindfulness app. Its purpose is to help you guard your gaze and keep your heart connected with the remembrance of Allah (dhikr) throughout daily phone usage by displaying gentle, non-intrusive reminders around your screen notch or status bar.</string>
+
+    <string name="faq_q2">Does running the service 24/7 in the background drain battery?</string>
+    <string name="faq_a2">Not at all! PureVision is lightweight and highly optimized. It runs completely offline without network polls, heavy animations, or background wake-locks. Battery impact is practically negligible.</string>
+
+    <string name="faq_q3">Will PureVision stop if I clear Recent Apps or restart my phone?</string>
+    <string name="faq_a3">No. PureVision continues running even when cleared from recent apps, and automatically starts when your device boots up. For uninterrupted 24/7 operation, make sure to set Battery Optimization for PureVision to \'Unrestricted\' in your device settings.</string>
+
+    <string name="faq_q4">Can I hide the \'PureVision Service is active\' notification?</string>
+    <string name="faq_a4">Yes, completely!\nAndroid requires foreground services to display a status notification. However, you can easily hide it:\n1. Open Settings > \'Hide / Manage Notification\'.\n2. Turn off the \'Service Background Status\' notification category.\nThe on-screen overlay will continue running smoothly without showing the notification!</string>
+
+    <string name="faq_q5">My phone has a center notch; can I position the reminder below or beside it?</string>
+    <string name="faq_a5">Yes! PureVision is tailored for modern phone cutouts:\n• Enable \'Center Notch Island\' mode to wrap the reminder in an elegant pill box right below your camera cutout.\n• Use the horizontal (X) and vertical (Y) sliders to adjust the exact position anywhere on your screen.</string>
+
+    <string name="faq_q6">Why is live Zikr not appearing on my lock screen?</string>
+    <string name="faq_a6">To view live Zikr on your lock screen, ensure lock screen notifications are enabled in your phone settings. Turn on \'Live Zikr on Notification &amp; Lock Screen\' on the main screen and allow lock screen notification content in your system settings.</string>
+
+    <string name="faq_q7">What should I do if Android shows \"Restricted setting\"?</string>
+    <string name="faq_a7">On Android 13+, sideloaded APKs require extra confirmation for accessibility and overlay permissions. To fix this:\n1. Go to phone Settings > Apps > PureVision (App Info).\n2. Tap the top-right 3-dot (⋮) menu.\n3. Tap \'Allow restricted settings\' and confirm with your device PIN or fingerprint.\n4. Return to PureVision and enable the overlay permission.</string>
+
+    <string name="faq_q8">Is my data safe? Does PureVision access the internet?</string>
+    <string name="faq_a8">PureVision is 100% offline and privacy-first. The app does not request internet permission and collects zero user data. Your privacy is completely guaranteed.</string>
+
+    <string name="faq_q9">Can I add custom Arabic/Bengali dhikr or Quranic verses?</string>
+    <string name="faq_a9">Yes! In the \'Custom Text\' section, you can write any Quranic ayah, dua, or personal reflection. You can also customize the Zikr list with your preferred dhikr phrases.</string>
+
+    <string name="faq_q10">How can I back up my settings when changing phones?</string>
+    <string name="faq_a10">In the Settings page, tap \'Backup Settings\' to save your customized configuration to a file. On your new phone, tap \'Restore Settings\' to restore all your preferences in one tap.</string>
 
 </resources>

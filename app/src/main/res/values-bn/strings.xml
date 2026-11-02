@@ -44,8 +44,8 @@
     <string name="app_permission_dialog_title">পারমিশন ব্লক করা আছে</string>
     <string name="app_permission_dialog_message">অ্যান্ড্রয়েড ১৩+ ভার্সনে, APK থেকে ইন্সটল করা অ্যাপের জন্য এই পারমিশনটি ডিফল্টরূপে ব্লক করা থাকে।\n\nএটি চালু করতে, আপনাকে ম্যানুয়ালি \'Restricted settings\' চালু করতে হবে।\n\n\'OK\' বাটন চাপলে আপনাকে \'App Info\' পেজে নিয়ে যাওয়া হবে।\n\nসেখানে গিয়ে যা করবেন:\n১. উপরের তিন-ডট (...) মেনুতে ক্লিক করুন।\n২. \'Allow restricted settings\' সিলেক্ট করুন এবং PIN দিয়ে কনফার্ম করুন।\n৩. এরপর অ্যাপে ফিরে এসে আবার সার্ভিসটি চালু করার চেষ্টা করুন।</string>
     <string name="app_permission_dialog_button_ok">OK, App Info-তে চলো</string>
-    <string name="app_permission_dialog_button_cancel">Cancel</string>
-    <string name="app_permission_denied_toast">পারমিশন ছাড়া সার্ভিস চালু হবেবিধা</string>
+    <string name="app_permission_dialog_button_cancel">বাতিল</string>
+    <string name="app_permission_denied_toast">পারমিশন ছাড়া সার্ভিস চালু হবে না</string>
 
     <string name="template_custom">কাস্টম...</string>
 
@@ -67,8 +67,8 @@
         <item>নীল</item>
     </string-array>
 
-    <string name="action_share">Share</string>
-    <string name="share_text">Download Pure Vision App => https://app.deenelife.com/purevision</string>
+    <string name="action_share">শেয়ার</string>
+    <string name="share_text">✨ পিউর ভিশন (PureVision) - ইসলামিক স্ক্রিন রিমাইন্ডার ও আত্মশুদ্ধি\n\nদৃষ্টির হেফাজত এবং সবসময় আল্লাহর স্মরণে অভ্যস্ত হতে স্ক্রিনে রাখুন কুরআন ও যিকির প্রদর্শন।\n\n❝ যে ব্যক্তি কোনো ভালো কাজের পথ দেখায়, সে ওই কাজ সম্পাদনকারীর সমান সওয়াব পাবে। ❞\n— রাসূলুল্লাহ ﷺ (সহীহ মুসলিম: ১৮৯৩)\n\nসাদকায়ে জারিয়ার নিয়তে অ্যাপটি আপনার প্রিয়জন ও বন্ধুদের সাথে শেয়ার করুন। যতবার তারা যিকির ও দৃষ্টির হেফাজত করবে, আপনিও পেতে থাকবেন চলমান নেক আমলের সওয়াব ইনশাআল্লাহ!\n\n📲 অ্যাপ ডাউনলোড লিংক: https://app.deenelife.com/purevision\n📢 অফিসিয়াল টেলিগ্রাম চ্যানেল: https://t.me/purevisionapp</string>
 
     <string name="title_help_guide">সেটআপ গাইড</string>
     <string name="title_display_permission">১. অন্যান্য অ্যাপের উপর প্রদর্শন</string>
@@ -87,6 +87,7 @@
     <string name="hint_enter_zikr">এখানে যিকির লিখুন</string>
     <string name="button_delete_zikr">মুছুন</string>
     <string name="button_add_new_zikr">নতুন যিকির যোগ করুন</string>
+    <string name="button_reset_default_zikr">ডিফল্ট যিকির তালিকা ফিরিয়ে আনুন</string>
 
     <string name="zikr_default_1">সুবহানাল্লাহ</string>
     <string name="zikr_default_2">আলহামদুলিল্লাহ</string>
@@ -94,8 +95,8 @@
     <string name="zikr_default_4">লা ইলাহা ইল্লাল্লাহ</string>
     <string name="zikr_default_5">আস্তাগফিরুল্লাহ</string>
 
-    <string name="action_backup_settings">Backup Data</string>
-    <string name="action_restore_settings">Restore Data</string>
+    <string name="action_backup_settings">সেটিংস ব্যাকআপ</string>
+    <string name="action_restore_settings">সেটিংস রিস্টোর</string>
     <string name="backup_file_name">purevision_backup.xml</string>
     <string name="backup_success">ব্যাকআপ সফল হয়েছে</string>
     <string name="backup_failed">ব্যাকআপ ব্যর্থ হয়েছে</string>
@@ -104,6 +105,127 @@
 
     <string name="action_reset">রিসেট</string>
 
-    <string name="action_update_app">Update App</string>
+    <string name="action_update_app">অ্যাপ আপডেট চেক</string>
+
+    <!-- Font Support -->
+    <string name="label_font_family">ফন্ট নির্বাচন করুন</string>
+    <string name="font_solaimanlipi">SolaimanLipi (বাংলা)</string>
+    <string name="font_amiri">Amiri (العربية / কুরআনীয় আরবি)</string>
+    <string name="font_poppins">Poppins (ইংরেজি / মডার্ন)</string>
+    <string name="font_system">সিস্টেম ডিফল্ট</string>
+    <string name="font_custom">কাস্টম ফন্ট (ফাইল থেকে)</string>
+    <string name="button_pick_custom_font">ফাইল ম্যানেজার থেকে ফন্ট বাছুন (.ttf/.otf)</string>
+    <string name="custom_font_success">কাস্টম ফন্ট সফলভাবে প্রয়োগ করা হয়েছে</string>
+    <string name="custom_font_failed">ফন্ট ফাইলটি সঠিক নয়। অনুগ্রহ করে সঠিক .ttf বা .otf ফাইল বাছুন।</string>
+
+    <!-- Status Bar Settings -->
+    <string name="title_status_bar_settings">স্ট্যাটাস বার ও নচ অপশন</string>
+    <string name="label_status_bar_pin">স্ক্রিন ওভারলে নচ / স্ট্যাটাস বারে পিন করুন</string>
+    <string name="desc_status_bar_pin">স্ক্রিনের ভাসমান ওভারলে টেক্সটকে নচ/স্ট্যাটাস বার লেভেলে পিন করে ক্যামেরা নচ পরিহার করে।</string>
+    <string name="label_notch_mode">নচ পজিশন স্টাইল</string>
+    <string name="notch_mode_island">ক্যামেরার নিচে আইল্যান্ড</string>
+    <string name="notch_mode_side">নচের পাশে (বামে/ডানে)</string>
+    <string name="desc_notch_island">ক্যামেরা নচের ঠিক নিচে সুন্দর সার্কুলার ক্যাপসুল ডিজাইনে যিকির শো করবে।</string>
+    <string name="desc_notch_side">স্ট্যাটাস বারের বামে বা ডানে টেক্সটটি অবস্থান করবে।</string>
+    <string name="label_notch_drop_distance">ক্যামেরার নিচ থেকে দূরত্ব</string>
+    <string name="action_drop_close">কাছে (২৪dp)</string>
+    <string name="action_drop_medium">ডিফল্ট (৩২dp)</string>
+    <string name="action_drop_far">দূরে (৪৪dp)</string>
+    <string name="label_notch_offset_x">সেন্টারিং ফাইন-টিউন (বামে-ডানে)</string>
+    <string name="label_notch_alignment">সাইড পজিশন প্রিসেট</string>
+    <string name="action_notch_left">বামে</string>
+    <string name="action_notch_center">মাঝে</string>
+    <string name="action_notch_right">ডানে</string>
+    <string name="label_notch_slider">অনুভূমিক অবস্থান (বামে-ডানে মুভ)</string>
+    <string name="label_notch_side_vertical">উল্লম্ব অবস্থান (উপরে-নিচে মুভ)</string>
+    <string name="label_notification_zikr">নোটিফিকেশন ও লকস্ক্রিনে লাইভ জিকির</string>
+    <string name="desc_notification_zikr">নোটিফিকেশন বার ও লকস্ক্রিনে বর্তমান জিকিরটি লাইভ আপডেট হতে থাকবে।</string>
+    <string name="toast_status_bar_only_mode">শুধুমাত্র নোটিফিকেশন মোডে চলছে (স্ক্রিন ওভারলে নিষ্ক্রিয়)।</string>
+
+    <!-- Quick Settings Tile -->
+    <string name="tile_label">PureVision</string>
+
+    <!-- Lock Screen Notification Permission Guidance -->
+    <string name="title_lockscreen_permission">লকস্ক্রিন নোটিফিকেশন পারমিশন</string>
+    <string name="desc_lockscreen_permission">লকস্ক্রিনে লাইভ জিকির দেখার জন্য আপনার ফোনের নোটিফিকেশন সেটিংসে \'Show on Lock Screen\' বা \'Show all content\' চালু থাকতে হবে।</string>
+    <string name="desc_lockscreen_permission_blocked">অ্যাপের নোটিফিকেশন বন্ধ রয়েছে। লাইভ জিকির দেখতে অনুগ্রহ করে নোটিফিকেশন চালু করুন।</string>
+    <string name="button_open_notification_settings">নোটিফিকেশন সেটিংস</string>
+    <string name="action_got_it">বুঝেছি</string>
+
+    <!-- Background Service Notification Customization -->
+    <string name="notification_channel_service">সার্ভিস ব্যাকগ্রাউন্ড স্ট্যাটাস</string>
+    <string name="notification_channel_service_desc">ব্যাকগ্রাউন্ডে পিউরভিশন সার্ভিস সচল রাখে। স্ক্রিন ওভারলে চালু রেখেই এটিকে সেটিংস থেকে সম্পূর্ণ লুকানো যায়।</string>
+    <string name="notification_channel_zikr">লাইভ জিকির নোটিফিকেশন</string>
+    <string name="title_hide_notification_setting">সার্ভিস নোটিফিকেশন লুকান / পরিচালনা</string>
+    <string name="action_hide_notification_tip">নোটিফিকেশন লুকাতে চান?</string>
+    <string name="desc_hide_notification_dialog">অ্যান্ড্রয়েড সিস্টেমের নিয়মে ব্যাকগ্রাউন্ডে সার্ভিস চালু রাখতে একটি ফোরগ্রাউন্ড নোটিফিকেশন আবশ্যক হয়।\n\nতবে আপনি চাইলে এটি সম্পূর্ণ লুকাতে পারেন:\n১. নিচে \'নোটিফিকেশন সেটিংস\' বাটনে চাপুন।\n২. \'সার্ভিস ব্যাকগ্রাউন্ড স্ট্যাটাস\' ক্যাটাগরিটি বন্ধ (Off) করে দিন।\n\nনোটিফিকেশন বন্ধ থাকলেও স্ক্রিনে আপনার যিকির বা টেক্সট কোনো সমস্যা ছাড়াই স্বাভাবিকভাবে চলতে থাকবে!</string>
+
+    <!-- Settings & About Strings -->
+    <string name="title_settings">সেটিংস</string>
+    <string name="title_about">অ্যাপ পরিচিতি</string>
+    <string name="action_settings">সেটিংস</string>
+    <string name="action_about">অ্যাপ পরিচিতি</string>
+    <string name="desc_settings_language">অ্যাপের ভাষা নির্বাচন করুন</string>
+    <string name="desc_settings_backup">সেটিংস ফাইলে ব্যাকআপ সংরক্ষণ করুন</string>
+    <string name="desc_settings_restore">সংরক্ষিত ব্যাকআপ ফাইল থেকে রিস্টোর করুন</string>
+    <string name="desc_settings_update">GitHub থেকে সর্বশেষ ভার্সন চেক করুন</string>
+    <string name="desc_settings_notifications">সিস্টেম নোটিফিকেশন নিয়ন্ত্রণ করুন</string>
+    <string name="desc_settings_about">উদ্দেশ্য, টেলিগ্রাম চ্যানেল ও অন্যান্য তথ্য</string>
+
+    <string name="about_tagline">দৃষ্টির পবিত্রতা ও আল্লাহর স্মরণে সদা জাগ্রত থাকুন</string>
+    <string name="about_purpose_title">অ্যাপের মূল উদ্দেশ্য</string>
+    <string name="about_purpose_desc">পিউরভিশন একটি সম্পূর্ণ অফলাইন, প্রাইভেসি-সুরক্ষিত ইসলামিক রিমাইন্ডার অ্যাপ্লিকেশন। প্রতিদিনের ফোন ব্যবহারের মাঝে আল্লাহর স্মরণ ও জিকিরের মাধ্যমে মন ও দৃষ্টিকে পবিত্র রাখতে এটি আপনাকে প্রতিনিয়ত অনুপ্রেরণা যোগাবে।</string>
+    <string name="about_privacy_title">১০০% অফলাইন ও নিরাপদ</string>
+    <string name="about_privacy_desc">অ্যাপটি সম্পূর্ণ অফলাইনে চলে। কোনো প্রকার ডাটা কালেকশন, বিজ্ঞাপন বা ইন্টারনেট সংযোগের প্রয়োজন নেই। আপনার ফোন ও ব্যক্তিগত তথ্য শতভাগ নিরাপদ।</string>
+    <string name="about_telegram_title">অফিসিয়াল টেলিগ্রাম চ্যানেল</string>
+    <string name="about_telegram_desc">নতুন আপডেট, পরামর্শ, ফিডব্যাক ও অন্যান্য ফিচারের জন্য আমাদের টেলিগ্রাম কমিউনিটিতে যুক্ত থাকুন।</string>
+    <string name="action_join_telegram">টেলিগ্রাম চ্যানেলে যুক্ত হন</string>
+    <string name="about_developer_title">আন্তরিক নিবেদন</string>
+    <string name="about_developer_desc">মুসলিম উম্মাহর খেদমতে দ্বীনেলাইফ (DeeneLife) কর্তৃক নিবেদিত। আল্লাহ আমাদের এই ক্ষুদ্র প্রচেষ্টা কবুল করুন।</string>
+    <string name="action_visit_website">দ্বীনেলাইফ ওয়েবসাইট দেখুন</string>
+
+    <!-- Sadaqah Jariyah & Settings Items -->
+    <string name="title_settings_share">অ্যাপ শেয়ার করুন (সাদকায়ে জারিয়া)</string>
+    <string name="desc_settings_share">অন্যদের সাথে শেয়ার করে সাদকায়ে জারিয়ার সওয়াব অর্জন করুন</string>
+    <string name="desc_settings_help">পারমিশন ও ব্যাকগ্রাউন্ড সেটআপ সহায়িকা</string>
+    <string name="about_share_title">সাদকায়ে জারিয়া হিসেবে শেয়ার করুন</string>
+    <string name="about_share_hadith">❝ যে ব্যক্তি কোনো ভালো কাজের পথ দেখায়, সে ওই কাজ সম্পাদনকারীর সমান সওয়াব পাবে। ❞\n— রাসূলুল্লাহ ﷺ (সহীহ মুসলিম: ১৮৯৩)</string>
+    <string name="about_share_desc">পিউর ভিশন সম্পূর্ণ অফলাইন ও নিঃস্বার্থ একটি উদ্যোগ। আপনার পরিবার, বন্ধুমহল ও দ্বীনি ভাই-বোনদের সাথে অ্যাপটি সাদকায়ে জারিয়ার নিয়তে শেয়ার করুন। যতবার তারা আল্লাহর স্মরণে দৃষ্টি সংযত রাখবে, আপনিও তাদের সমান চলমান নেক সওয়াব পাবেন ইনশাআল্লাহ।</string>
+    <string name="action_share_purevision">পিউর ভিশন শেয়ার করুন</string>
+
+    <!-- FAQ Strings -->
+    <string name="title_faq">সাধারণ জিজ্ঞাসা (FAQ)</string>
+    <string name="desc_settings_faq">অ্যাপ সম্পর্কিত জরুরি প্রশ্নের সহজ সমাধান</string>
+    <string name="desc_faq_header">ব্যবহারকারীদের প্রয়োজনীয় প্রশ্নের উত্তরসমূহ</string>
+
+    <string name="faq_q1">পিউর ভিশন (PureVision) কী এবং এর মূল উদ্দেশ্য কী?</string>
+    <string name="faq_a1">পিউর ভিশন একটি সম্পূর্ণ অফলাইন, প্রাইভেসি-ফার্স্ট ইসলামিক রিমাইন্ডার ও আত্মশুদ্ধি অ্যাপ। স্মার্টফোন ব্যবহারের সময় আমাদের দৃষ্টির পবিত্রতা রক্ষা এবং সবসময় আল্লাহর স্মরণে (যিকির) অভ্যস্ত করে তোলাই এর মূল উদ্দেশ্য। এটি স্ক্রিনের সুবিধাজনক স্থানে (যেমন ক্যামেরার পাশে বা নচের নিচে) আলতোভাবে যিকির, কুরআন ও হাদীসের অনুপ্রেরণামূলক বাণী প্রদর্শন করে।</string>
+
+    <string name="faq_q2">ব্যাকগ্রাউন্ডে সবসময় চালু রাখলে কি ফোনের ব্যাটারি বেশি খরচ হবে?</string>
+    <string name="faq_a2">না, একেবারেই না! পিউর ভিশন অত্যন্ত হালকা (Lightweight) এবং আধুনিক প্রযুক্তিতে অপ্টিমাইজড। এতে কোনো অপ্রয়োজনীয় ব্যাকগ্রাউন্ড সার্ভিস, ভারি অ্যানিমেশন বা ইন্টারনেট ট্রাফিক নেই। অ্যাপটি ব্যাকগ্রাউন্ডে চলতে ব্যাটারি খরচ হয় না বললেই চলে।</string>
+
+    <string name="faq_q3">রিসেন্ট অ্যাপস ক্লিয়ার করলে বা ফোন রিস্টার্ট দিলে কি সার্ভিস বন্ধ হয়ে যাবে?</string>
+    <string name="faq_a3">না, রিসেন্ট অ্যাপস ক্লিয়ার করলেও পিউর ভিশন ব্যাকগ্রাউন্ডে স্বাভাবিকভাবেই সচল থাকে। আর ফোন রিস্টার্ট দিলে এটি স্বয়ংক্রিয়ভাবে পুনরায় চালু হয়ে যায়। তবে সার্ভিসটি নিরবচ্ছিন্নভাবে ২৪/৭ সচল রাখতে ফোনের ব্যাটারি অপ্টিমাইজেশন থেকে PureVision-কে \'Unrestricted\' (সীমাহীন) করে দিন।</string>
+
+    <string name="faq_q4">নোটিফিকেশনে \'PureVision Service is active\' দেখাচ্ছে, এটা কি লুকানো সম্ভব?</string>
+    <string name="faq_a4">হ্যাঁ, খুব সহজেই এটি সম্পূর্ণ লুকানো যায়!\nঅ্যান্ড্রয়েড সিস্টেমের সুরক্ষার কারণে ব্যাকগ্রাউন্ডে চলা যেকোনো সার্ভিসের নোটিফিকেশন দেখাতে হয়। তবে আপনি চাইলে:\n১. সেটিংস পেজ থেকে \'সার্ভিস নোটিফিকেশন লুকান / পরিচালনা\' অপশনে যান।\n২. \'সার্ভিস ব্যাকগ্রাউন্ড স্ট্যাটাস\' ক্যাটাগরিটি বন্ধ (Off) করে দিন।\nনোটিফিকেশন বন্ধ থাকলেও স্ক্রিনের যিকির সম্পূর্ণ স্বাভাবিকভাবে চলতে থাকবে!</string>
+
+    <string name="faq_q5">আমার ফোনের ক্যামেরা মাঝে (Center Notch), টেক্সট কি নচের নিচে বা পাশে বসানো যাবে?</string>
+    <string name="faq_a5">হ্যাঁ! পিউর ভিশনে ডিসপ্লে ও নচের জন্য পূর্ণাঙ্গ কাস্টমাইজেশন সুবিধা রয়েছে:\n• যাদের ক্যামেরা স্ক্রিনের সেন্টারে, তারা \'সেন্টার নচ আইল্যান্ড\' মোড চালু করলে টেক্সটটি নচের নিচে একটি দৃষ্টিনন্দন আইল্যান্ড বক্সে প্রদর্শিত হবে।\n• এছাড়া অনুভূমিক (বামে-ডানে) এবং উল্লম্ব (উপরে-নিচে) স্লাইডারের সাহায্যে টেক্সটের অবস্থান নিখুঁতভাবে সমন্বয় করতে পারবেন।</string>
+
+    <string name="faq_q6">লক স্ক্রিনে যিকির দেখাচ্ছে না কেন?</string>
+    <string name="faq_a6">লক স্ক্রিনে যিকির দেখতে হলে আপনার ফোনের সিস্টেম সেটিংসে লক স্ক্রিন নোটিফিকেশন চালু থাকতে হবে। হোম স্ক্রিনের \"নোটিফিকেশন ও লকস্ক্রিনে লাইভ জিকির\" অপশনটি অন করুন এবং ফোনের সেটিংসে লকস্ক্রিনে নোটিফিকেশনের পূর্ণ বিবরণ প্রদর্শনের অনুমতি দিন।</string>
+
+    <string name="faq_q7">পারমিশন দিতে গেলে \"Restricted setting\" (সীমাবদ্ধ সেটিংস) দেখালে কী করব?</string>
+    <string name="faq_a7">অ্যান্ড্রয়েড ১৩ বা পরবর্তী সংস্করণে গুগল প্লে স্টোরের বাইরের APK ইনস্টল করলে নিরাপত্তার স্বার্থে সিস্টেম প্রথমবার এই বার্তা দিতে পারে। সমাধান:\n১. ফোনের Settings > Apps > PureVision (App Info)-তে যান।\n২. উপরের ডানদিকের ৩-ডট (⋮) মেনুতে ট্যাপ করুন।\n৩. \'Allow restricted settings\' অপশনটি চালু করে ফোন আনলক করুন।\n৪. এরপর পুনরায় অ্যাপে ফিরে পারমিশন অন করুন।</string>
+
+    <string name="faq_q8">আমার ব্যক্তিগত ডাটা কি নিরাপদ? অ্যাপে কি ইন্টারনেট সংযোগ লাগে?</string>
+    <string name="faq_a8">পিউর ভিশন ১০০% অফলাইন ও সম্পূর্ণ নিরাপদ। এই অ্যাপে কোনো প্রকার ইন্টারনেট পারমিশন নেই এবং এটি কোনো ব্যবহারকারীর তথ্য সংগ্রহ বা ট্র্যাক করে না। আপনার ডিভাইস ও ব্যক্তিগত ডাটা সম্পূর্ণ সুরক্ষিত।</string>
+
+    <string name="faq_q9">আমি কি নিজের পছন্দমতো আরবি/বাংলা যিকির বা কুরআন আয়াত যোগ করতে পারি?</string>
+    <string name="faq_a9">অবশ্যই! আপনি \'কাস্টম টেক্সট\' অপশনে গিয়ে আপনার পছন্দের যেকোনো দোয়া, কুরআন আয়াত বা বাণী লিখতে পারেন। এছাড়া জিকির মোডে আপনার কাঙ্ক্ষিত নতুন যিকির তালিকা তৈরি ও যুক্ত করতে পারেন।</string>
+
+    <string name="faq_q10">ফোন পরিবর্তন করলে বা অ্যাপ রিসেট দিলে সেটিংস ব্যাকআপ নেব কীভাবে?</string>
+    <string name="faq_a10">সেটিংস পেজের \"সেটিংস ব্যাকআপ\" অপশনে ক্লিক করে সহজেই আপনার সকল সেটিংস একটি ফাইলে যেকোনো সুরক্ষিত ফোল্ডারে সেভ করে রাখতে পারেন। পরবর্তীতে নতুন ফোনে \"সেটিংস রিস্টোর\" অপশন দিয়ে নিমেষেই সব কনফিগারেশন ফিরিয়ে আনতে পারবেন।</string>
 
 </resources>
